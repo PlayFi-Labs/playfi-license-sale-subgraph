@@ -1,0 +1,47 @@
+type Tier @entity {
+    id: Bytes!
+    claimed: BigInt!
+    price: BigInt!
+    totalCap: BigInt!
+    individualCap: BigInt!
+}
+
+type Phase @entity {
+    id: Bytes!
+    name: String!
+    active: Boolean!
+}
+
+type Stat @entity {
+    id: Bytes!
+    totalClaims: BigInt!
+    totalProceeds: BigInt!
+}
+
+type Referral @entity {
+    id: Bytes!
+    code: String!
+    recipient: Bytes!
+    commissionPercentage: BigInt!
+    discountPercentage: BigInt!
+    totalCommission: BigInt!
+    totalUsed: BigInt!
+    activeSince: BigInt!
+}
+
+type Account @entity {
+    id: Bytes!
+    totalLicenses: BigInt!
+    totalPaid: BigInt!
+    claims: [Claim!]! @derivedFrom(field: "account")
+}
+
+type Claim @entity {
+    id: Bytes!
+    account: Account!
+    phase: Phase!
+    tier: Tier
+    amount: BigInt!
+    referral: Referral
+    paid: BigInt!
+}
