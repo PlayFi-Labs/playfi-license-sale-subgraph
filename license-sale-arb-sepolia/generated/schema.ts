@@ -12,9 +12,9 @@ import {
 } from "@graphprotocol/graph-ts";
 
 export class Tier extends Entity {
-  constructor(id: Bytes) {
+  constructor(id: string) {
     super();
-    this.set("id", Value.fromBytes(id));
+    this.set("id", Value.fromString(id));
   }
 
   save(): void {
@@ -22,34 +22,45 @@ export class Tier extends Entity {
     assert(id != null, "Cannot save Tier entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.BYTES,
-        `Entities of type Tier must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        id.kind == ValueKind.STRING,
+        `Entities of type Tier must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
-      store.set("Tier", id.toBytes().toHexString(), this);
+      store.set("Tier", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): Tier | null {
-    return changetype<Tier | null>(
-      store.get_in_block("Tier", id.toHexString()),
-    );
+  static loadInBlock(id: string): Tier | null {
+    return changetype<Tier | null>(store.get_in_block("Tier", id));
   }
 
-  static load(id: Bytes): Tier | null {
-    return changetype<Tier | null>(store.get("Tier", id.toHexString()));
+  static load(id: string): Tier | null {
+    return changetype<Tier | null>(store.get("Tier", id));
   }
 
-  get id(): Bytes {
+  get id(): string {
     let value = this.get("id");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set id(value: Bytes) {
-    this.set("id", Value.fromBytes(value));
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get number(): BigInt {
+    let value = this.get("number");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set number(value: BigInt) {
+    this.set("number", Value.fromBigInt(value));
   }
 
   get claimed(): BigInt {
@@ -106,9 +117,9 @@ export class Tier extends Entity {
 }
 
 export class Phase extends Entity {
-  constructor(id: Bytes) {
+  constructor(id: string) {
     super();
-    this.set("id", Value.fromBytes(id));
+    this.set("id", Value.fromString(id));
   }
 
   save(): void {
@@ -116,34 +127,32 @@ export class Phase extends Entity {
     assert(id != null, "Cannot save Phase entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.BYTES,
-        `Entities of type Phase must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        id.kind == ValueKind.STRING,
+        `Entities of type Phase must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
-      store.set("Phase", id.toBytes().toHexString(), this);
+      store.set("Phase", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): Phase | null {
-    return changetype<Phase | null>(
-      store.get_in_block("Phase", id.toHexString()),
-    );
+  static loadInBlock(id: string): Phase | null {
+    return changetype<Phase | null>(store.get_in_block("Phase", id));
   }
 
-  static load(id: Bytes): Phase | null {
-    return changetype<Phase | null>(store.get("Phase", id.toHexString()));
+  static load(id: string): Phase | null {
+    return changetype<Phase | null>(store.get("Phase", id));
   }
 
-  get id(): Bytes {
+  get id(): string {
     let value = this.get("id");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set id(value: Bytes) {
-    this.set("id", Value.fromBytes(value));
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
   }
 
   get name(): string {
@@ -174,9 +183,9 @@ export class Phase extends Entity {
 }
 
 export class Stat extends Entity {
-  constructor(id: Bytes) {
+  constructor(id: string) {
     super();
-    this.set("id", Value.fromBytes(id));
+    this.set("id", Value.fromString(id));
   }
 
   save(): void {
@@ -184,34 +193,32 @@ export class Stat extends Entity {
     assert(id != null, "Cannot save Stat entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.BYTES,
-        `Entities of type Stat must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        id.kind == ValueKind.STRING,
+        `Entities of type Stat must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
-      store.set("Stat", id.toBytes().toHexString(), this);
+      store.set("Stat", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): Stat | null {
-    return changetype<Stat | null>(
-      store.get_in_block("Stat", id.toHexString()),
-    );
+  static loadInBlock(id: string): Stat | null {
+    return changetype<Stat | null>(store.get_in_block("Stat", id));
   }
 
-  static load(id: Bytes): Stat | null {
-    return changetype<Stat | null>(store.get("Stat", id.toHexString()));
+  static load(id: string): Stat | null {
+    return changetype<Stat | null>(store.get("Stat", id));
   }
 
-  get id(): Bytes {
+  get id(): string {
     let value = this.get("id");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set id(value: Bytes) {
-    this.set("id", Value.fromBytes(value));
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
   }
 
   get totalClaims(): BigInt {
@@ -242,9 +249,9 @@ export class Stat extends Entity {
 }
 
 export class Referral extends Entity {
-  constructor(id: Bytes) {
+  constructor(id: string) {
     super();
-    this.set("id", Value.fromBytes(id));
+    this.set("id", Value.fromString(id));
   }
 
   save(): void {
@@ -252,34 +259,32 @@ export class Referral extends Entity {
     assert(id != null, "Cannot save Referral entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.BYTES,
-        `Entities of type Referral must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        id.kind == ValueKind.STRING,
+        `Entities of type Referral must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
-      store.set("Referral", id.toBytes().toHexString(), this);
+      store.set("Referral", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): Referral | null {
-    return changetype<Referral | null>(
-      store.get_in_block("Referral", id.toHexString()),
-    );
+  static loadInBlock(id: string): Referral | null {
+    return changetype<Referral | null>(store.get_in_block("Referral", id));
   }
 
-  static load(id: Bytes): Referral | null {
-    return changetype<Referral | null>(store.get("Referral", id.toHexString()));
+  static load(id: string): Referral | null {
+    return changetype<Referral | null>(store.get("Referral", id));
   }
 
-  get id(): Bytes {
+  get id(): string {
     let value = this.get("id");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set id(value: Bytes) {
-    this.set("id", Value.fromBytes(value));
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
   }
 
   get code(): string {
@@ -375,9 +380,9 @@ export class Referral extends Entity {
 }
 
 export class Account extends Entity {
-  constructor(id: Bytes) {
+  constructor(id: string) {
     super();
-    this.set("id", Value.fromBytes(id));
+    this.set("id", Value.fromString(id));
   }
 
   save(): void {
@@ -385,34 +390,32 @@ export class Account extends Entity {
     assert(id != null, "Cannot save Account entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.BYTES,
-        `Entities of type Account must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        id.kind == ValueKind.STRING,
+        `Entities of type Account must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
-      store.set("Account", id.toBytes().toHexString(), this);
+      store.set("Account", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): Account | null {
-    return changetype<Account | null>(
-      store.get_in_block("Account", id.toHexString()),
-    );
+  static loadInBlock(id: string): Account | null {
+    return changetype<Account | null>(store.get_in_block("Account", id));
   }
 
-  static load(id: Bytes): Account | null {
-    return changetype<Account | null>(store.get("Account", id.toHexString()));
+  static load(id: string): Account | null {
+    return changetype<Account | null>(store.get("Account", id));
   }
 
-  get id(): Bytes {
+  get id(): string {
     let value = this.get("id");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set id(value: Bytes) {
-    this.set("id", Value.fromBytes(value));
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
   }
 
   get totalLicenses(): BigInt {
@@ -442,18 +445,14 @@ export class Account extends Entity {
   }
 
   get claims(): ClaimLoader {
-    return new ClaimLoader(
-      "Account",
-      this.get("id")!.toBytes().toHexString(),
-      "claims",
-    );
+    return new ClaimLoader("Account", this.get("id")!.toString(), "claims");
   }
 }
 
 export class Claim extends Entity {
-  constructor(id: Bytes) {
+  constructor(id: string) {
     super();
-    this.set("id", Value.fromBytes(id));
+    this.set("id", Value.fromString(id));
   }
 
   save(): void {
@@ -461,76 +460,74 @@ export class Claim extends Entity {
     assert(id != null, "Cannot save Claim entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.BYTES,
-        `Entities of type Claim must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        id.kind == ValueKind.STRING,
+        `Entities of type Claim must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
-      store.set("Claim", id.toBytes().toHexString(), this);
+      store.set("Claim", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): Claim | null {
-    return changetype<Claim | null>(
-      store.get_in_block("Claim", id.toHexString()),
-    );
+  static loadInBlock(id: string): Claim | null {
+    return changetype<Claim | null>(store.get_in_block("Claim", id));
   }
 
-  static load(id: Bytes): Claim | null {
-    return changetype<Claim | null>(store.get("Claim", id.toHexString()));
+  static load(id: string): Claim | null {
+    return changetype<Claim | null>(store.get("Claim", id));
   }
 
-  get id(): Bytes {
+  get id(): string {
     let value = this.get("id");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set id(value: Bytes) {
-    this.set("id", Value.fromBytes(value));
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
   }
 
-  get account(): Bytes {
+  get account(): string {
     let value = this.get("account");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set account(value: Bytes) {
-    this.set("account", Value.fromBytes(value));
+  set account(value: string) {
+    this.set("account", Value.fromString(value));
   }
 
-  get phase(): Bytes {
+  get phase(): string {
     let value = this.get("phase");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set phase(value: Bytes) {
-    this.set("phase", Value.fromBytes(value));
+  set phase(value: string) {
+    this.set("phase", Value.fromString(value));
   }
 
-  get tier(): Bytes | null {
+  get tier(): string | null {
     let value = this.get("tier");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set tier(value: Bytes | null) {
+  set tier(value: string | null) {
     if (!value) {
       this.unset("tier");
     } else {
-      this.set("tier", Value.fromBytes(<Bytes>value));
+      this.set("tier", Value.fromString(<string>value));
     }
   }
 
@@ -547,20 +544,20 @@ export class Claim extends Entity {
     this.set("amount", Value.fromBigInt(value));
   }
 
-  get referral(): Bytes | null {
+  get referral(): string | null {
     let value = this.get("referral");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set referral(value: Bytes | null) {
+  set referral(value: string | null) {
     if (!value) {
       this.unset("referral");
     } else {
-      this.set("referral", Value.fromBytes(<Bytes>value));
+      this.set("referral", Value.fromString(<string>value));
     }
   }
 
