@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: PlayFiLicenseSale
-    network: arbitrum-sepolia
+    network: polygon-amoy
     source:
-      address: "0xC1a9e2c20c78D65b57037b67A627Aa7Bff4A7582"
+      address: "0xa58B633b77024895FB7A0d798A67aE10Ef46727C"
       abi: PlayFiLicenseSale
-      startBlock: 41503429
+      startBlock: 6748155
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

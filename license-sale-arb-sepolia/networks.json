@@ -1,8 +1,8 @@
 {
   "arbitrum-sepolia": {
     "PlayFiLicenseSale": {
-      "address": "0x9f058D7654FFC6489dDd5872becD1bb649de1fe5",
-      "startBlock": 37666514
+      "address": "0xC1a9e2c20c78D65b57037b67A627Aa7Bff4A7582",
+      "startBlock": 41503429
     }
   }
 }

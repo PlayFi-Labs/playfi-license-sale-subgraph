@@ -1,10 +1,10 @@
 {
-  "name": "license-sale",
+  "name": "playfi-license-sale-zk-sepolia",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy-alchemy": "graph deploy license-sale-arb-sepolia --node https://subgraphs.alchemy.com/api/subgraphs/deploy --version-label v0.0.1 --ipfs https://ipfs.satsuma.xyz --deploy-key <DEPLOY-KEY>",
+    "deploy-alchemy": "graph deploy playfi-license-sale-zk-sepolia --node https://subgraphs.alchemy.com/api/subgraphs/deploy --version-label v0.0.1 --ipfs https://ipfs.satsuma.xyz --deploy-key <DEPLOY-KEY>",
     "deploy-graph-studio": "graph deploy --studio playfi-license-sale-arb-sep",
     "create-local": "graph create --node http://localhost:8020/ playfi/license-sale",
     "remove-local": "graph remove --node http://localhost:8020/ playfi/license-sale",
