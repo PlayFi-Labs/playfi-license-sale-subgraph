@@ -33,8 +33,8 @@ import {handlePublicLicensesClaimed} from "../src/play-fi-license-sale";
 }*/
 
 export function createContractInitializedEvent(): ContractInitialized {
-  let contractInitializedEvent = changetype<ContractInitialized>(newMockEvent())
-  return contractInitializedEvent;
+    let contractInitializedEvent = changetype<ContractInitialized>(newMockEvent())
+    return contractInitializedEvent;
 }
 
 export function createTeamSaleStatusSetEvent(status: boolean): TeamSaleStatusSet {

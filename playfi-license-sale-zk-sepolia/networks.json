@@ -1,0 +1,8 @@
+{
+  "zksync-era-sepolia": {
+    "PlayFiLicenseSale": {
+      "address": "0x9c04477c8b551a7c82a1C5dFcaE9ce8BEd3A9cbd",
+      "startBlock": 2166568
+    }
+  }
+}

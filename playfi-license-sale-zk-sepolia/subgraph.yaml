@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: PlayFiLicenseSale
-    network: arbitrum-sepolia
+    network: zksync-era-sepolia
     source:
-      address: "0x3922071c459c5b5d2c1F2b6D9aB08633C056DEE2"
+      address: "0x107f20919a98475AFA234540202c1511ad546c08"
       abi: PlayFiLicenseSale
-      startBlock: 44050878
+      startBlock: 2305971
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

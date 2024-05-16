@@ -40,12 +40,12 @@ import {PublicLicensesClaimed} from "../generated/PlayFiLicenseSale/PlayFiLicens
 
 describe("ContractInitialized sets up the correct start state", () => {
   beforeAll(() => {
-  /*  let previousAdmin = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
-    )
-    let newAdmin = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
-    )*/
+    /*  let previousAdmin = Address.fromString(
+        "0x0000000000000000000000000000000000000001"
+      )
+      let newAdmin = Address.fromString(
+        "0x0000000000000000000000000000000000000001"
+      )*/
     let newContractInitializedEvent = createContractInitializedEvent()
     handleContractInitialized(newContractInitializedEvent)
   })
@@ -58,7 +58,7 @@ describe("ContractInitialized sets up the correct start state", () => {
 
     assert.entityCount("Stat", 1)
 
-     assert.fieldEquals(
+    assert.fieldEquals(
         "Stat",
         "0",
         "totalClaims",
