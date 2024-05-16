@@ -209,30 +209,24 @@ export class PartnerLicensesClaimed__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get paid(): BigInt {
+  get amount(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get amount(): BigInt {
+  get tier(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
-}
 
-export class PartnerMerkleRootSet extends ethereum.Event {
-  get params(): PartnerMerkleRootSet__Params {
-    return new PartnerMerkleRootSet__Params(this);
-  }
-}
-
-export class PartnerMerkleRootSet__Params {
-  _event: PartnerMerkleRootSet;
-
-  constructor(event: PartnerMerkleRootSet) {
-    this._event = event;
+  get paid(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
   }
 
-  get merkleRoot(): Bytes {
-    return this._event.parameters[0].value.toBytes();
+  get partnerCode(): string {
+    return this._event.parameters[4].value.toString();
+  }
+
+  get referral(): string {
+    return this._event.parameters[5].value.toString();
   }
 }
 
@@ -251,6 +245,48 @@ export class PartnerSaleStatusSet__Params {
 
   get status(): boolean {
     return this._event.parameters[0].value.toBoolean();
+  }
+
+  get partnerCode(): string {
+    return this._event.parameters[1].value.toString();
+  }
+}
+
+export class PartnerTierSet extends ethereum.Event {
+  get params(): PartnerTierSet__Params {
+    return new PartnerTierSet__Params(this);
+  }
+}
+
+export class PartnerTierSet__Params {
+  _event: PartnerTierSet;
+
+  constructor(event: PartnerTierSet) {
+    this._event = event;
+  }
+
+  get partnerCode(): string {
+    return this._event.parameters[0].value.toString();
+  }
+
+  get tierId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get price(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get individualCap(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+
+  get totalClaimed(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
+  }
+
+  get totalCap(): BigInt {
+    return this._event.parameters[5].value.toBigInt();
   }
 }
 
@@ -310,6 +346,24 @@ export class PublicLicensesClaimed__Params {
   }
 }
 
+export class PublicMerkleRootSet extends ethereum.Event {
+  get params(): PublicMerkleRootSet__Params {
+    return new PublicMerkleRootSet__Params(this);
+  }
+}
+
+export class PublicMerkleRootSet__Params {
+  _event: PublicMerkleRootSet;
+
+  constructor(event: PublicMerkleRootSet) {
+    this._event = event;
+  }
+
+  get merkleRoot(): Bytes {
+    return this._event.parameters[0].value.toBytes();
+  }
+}
+
 export class PublicSaleStatusSet extends ethereum.Event {
   get params(): PublicSaleStatusSet__Params {
     return new PublicSaleStatusSet__Params(this);
@@ -325,6 +379,40 @@ export class PublicSaleStatusSet__Params {
 
   get status(): boolean {
     return this._event.parameters[0].value.toBoolean();
+  }
+}
+
+export class PublicWhitelistLicensesClaimed extends ethereum.Event {
+  get params(): PublicWhitelistLicensesClaimed__Params {
+    return new PublicWhitelistLicensesClaimed__Params(this);
+  }
+}
+
+export class PublicWhitelistLicensesClaimed__Params {
+  _event: PublicWhitelistLicensesClaimed;
+
+  constructor(event: PublicWhitelistLicensesClaimed) {
+    this._event = event;
+  }
+
+  get account(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get amount(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get tier(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get paid(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+
+  get referral(): string {
+    return this._event.parameters[4].value.toString();
   }
 }
 
@@ -528,6 +616,58 @@ export class TierSet__Params {
   }
 }
 
+export class WhitelistTierSet extends ethereum.Event {
+  get params(): WhitelistTierSet__Params {
+    return new WhitelistTierSet__Params(this);
+  }
+}
+
+export class WhitelistTierSet__Params {
+  _event: WhitelistTierSet;
+
+  constructor(event: WhitelistTierSet) {
+    this._event = event;
+  }
+
+  get tierId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get price(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get individualCap(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get totalClaimed(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+
+  get totalCap(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
+  }
+}
+
+export class PlayFiLicenseSale__getPartnerTierResultTierStruct extends ethereum.Tuple {
+  get price(): BigInt {
+    return this[0].toBigInt();
+  }
+
+  get individualCap(): BigInt {
+    return this[1].toBigInt();
+  }
+
+  get totalClaimed(): BigInt {
+    return this[2].toBigInt();
+  }
+
+  get totalCap(): BigInt {
+    return this[3].toBigInt();
+  }
+}
+
 export class PlayFiLicenseSale__getReferralResultReferralStruct extends ethereum.Tuple {
   get discountPercentage(): BigInt {
     return this[0].toBigInt();
@@ -557,6 +697,77 @@ export class PlayFiLicenseSale__getTierResultTierStruct extends ethereum.Tuple {
 
   get totalCap(): BigInt {
     return this[3].toBigInt();
+  }
+}
+
+export class PlayFiLicenseSale__partnerTiersResult {
+  value0: BigInt;
+  value1: BigInt;
+  value2: BigInt;
+  value3: BigInt;
+
+  constructor(value0: BigInt, value1: BigInt, value2: BigInt, value3: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
+    return map;
+  }
+
+  getPrice(): BigInt {
+    return this.value0;
+  }
+
+  getIndividualCap(): BigInt {
+    return this.value1;
+  }
+
+  getTotalClaimed(): BigInt {
+    return this.value2;
+  }
+
+  getTotalCap(): BigInt {
+    return this.value3;
+  }
+}
+
+export class PlayFiLicenseSale__paymentDetailsForPartnerReferralResult {
+  value0: BigInt;
+  value1: BigInt;
+  value2: BigInt;
+
+  constructor(value0: BigInt, value1: BigInt, value2: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    return map;
+  }
+
+  getToPay(): BigInt {
+    return this.value0;
+  }
+
+  getCommission(): BigInt {
+    return this.value1;
+  }
+
+  getDiscount(): BigInt {
+    return this.value2;
   }
 }
 
@@ -625,6 +836,45 @@ export class PlayFiLicenseSale__referralsResult {
 }
 
 export class PlayFiLicenseSale__tiersResult {
+  value0: BigInt;
+  value1: BigInt;
+  value2: BigInt;
+  value3: BigInt;
+
+  constructor(value0: BigInt, value1: BigInt, value2: BigInt, value3: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
+    return map;
+  }
+
+  getPrice(): BigInt {
+    return this.value0;
+  }
+
+  getIndividualCap(): BigInt {
+    return this.value1;
+  }
+
+  getTotalClaimed(): BigInt {
+    return this.value2;
+  }
+
+  getTotalCap(): BigInt {
+    return this.value3;
+  }
+}
+
+export class PlayFiLicenseSale__whitelistTiersResult {
   value0: BigInt;
   value1: BigInt;
   value2: BigInt;
@@ -945,6 +1195,47 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
+  getPartnerTier(
+    partnerCode: string,
+    id: BigInt,
+  ): PlayFiLicenseSale__getPartnerTierResultTierStruct {
+    let result = super.call(
+      "getPartnerTier",
+      "getPartnerTier(string,uint256):((uint256,uint256,uint256,uint256))",
+      [
+        ethereum.Value.fromString(partnerCode),
+        ethereum.Value.fromUnsignedBigInt(id),
+      ],
+    );
+
+    return changetype<PlayFiLicenseSale__getPartnerTierResultTierStruct>(
+      result[0].toTuple(),
+    );
+  }
+
+  try_getPartnerTier(
+    partnerCode: string,
+    id: BigInt,
+  ): ethereum.CallResult<PlayFiLicenseSale__getPartnerTierResultTierStruct> {
+    let result = super.tryCall(
+      "getPartnerTier",
+      "getPartnerTier(string,uint256):((uint256,uint256,uint256,uint256))",
+      [
+        ethereum.Value.fromString(partnerCode),
+        ethereum.Value.fromUnsignedBigInt(id),
+      ],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      changetype<PlayFiLicenseSale__getPartnerTierResultTierStruct>(
+        value[0].toTuple(),
+      ),
+    );
+  }
+
   getReferral(id: string): PlayFiLicenseSale__getReferralResultReferralStruct {
     let result = super.call(
       "getReferral",
@@ -997,11 +1288,17 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
-  getTier(id: BigInt): PlayFiLicenseSale__getTierResultTierStruct {
+  getTier(
+    id: BigInt,
+    isWhitelist: boolean,
+  ): PlayFiLicenseSale__getTierResultTierStruct {
     let result = super.call(
       "getTier",
-      "getTier(uint256):((uint256,uint256,uint256,uint256))",
-      [ethereum.Value.fromUnsignedBigInt(id)],
+      "getTier(uint256,bool):((uint256,uint256,uint256,uint256))",
+      [
+        ethereum.Value.fromUnsignedBigInt(id),
+        ethereum.Value.fromBoolean(isWhitelist),
+      ],
     );
 
     return changetype<PlayFiLicenseSale__getTierResultTierStruct>(
@@ -1011,11 +1308,15 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
 
   try_getTier(
     id: BigInt,
+    isWhitelist: boolean,
   ): ethereum.CallResult<PlayFiLicenseSale__getTierResultTierStruct> {
     let result = super.tryCall(
       "getTier",
-      "getTier(uint256):((uint256,uint256,uint256,uint256))",
-      [ethereum.Value.fromUnsignedBigInt(id)],
+      "getTier(uint256,bool):((uint256,uint256,uint256,uint256))",
+      [
+        ethereum.Value.fromUnsignedBigInt(id),
+        ethereum.Value.fromBoolean(isWhitelist),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1049,21 +1350,24 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  partnerClaimsPerAddress(param0: Address): BigInt {
+  partnerClaimsPerAddress(param0: string, param1: Address): BigInt {
     let result = super.call(
       "partnerClaimsPerAddress",
-      "partnerClaimsPerAddress(address):(uint256)",
-      [ethereum.Value.fromAddress(param0)],
+      "partnerClaimsPerAddress(string,address):(uint256)",
+      [ethereum.Value.fromString(param0), ethereum.Value.fromAddress(param1)],
     );
 
     return result[0].toBigInt();
   }
 
-  try_partnerClaimsPerAddress(param0: Address): ethereum.CallResult<BigInt> {
+  try_partnerClaimsPerAddress(
+    param0: string,
+    param1: Address,
+  ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "partnerClaimsPerAddress",
-      "partnerClaimsPerAddress(address):(uint256)",
-      [ethereum.Value.fromAddress(param0)],
+      "partnerClaimsPerAddress(string,address):(uint256)",
+      [ethereum.Value.fromString(param0), ethereum.Value.fromAddress(param1)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1072,44 +1376,60 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  partnerMerkleRoot(): Bytes {
+  partnerClaimsPerTierPerAddress(
+    param0: string,
+    param1: BigInt,
+    param2: Address,
+  ): BigInt {
     let result = super.call(
-      "partnerMerkleRoot",
-      "partnerMerkleRoot():(bytes32)",
-      [],
+      "partnerClaimsPerTierPerAddress",
+      "partnerClaimsPerTierPerAddress(string,uint256,address):(uint256)",
+      [
+        ethereum.Value.fromString(param0),
+        ethereum.Value.fromUnsignedBigInt(param1),
+        ethereum.Value.fromAddress(param2),
+      ],
     );
 
-    return result[0].toBytes();
+    return result[0].toBigInt();
   }
 
-  try_partnerMerkleRoot(): ethereum.CallResult<Bytes> {
+  try_partnerClaimsPerTierPerAddress(
+    param0: string,
+    param1: BigInt,
+    param2: Address,
+  ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "partnerMerkleRoot",
-      "partnerMerkleRoot():(bytes32)",
-      [],
+      "partnerClaimsPerTierPerAddress",
+      "partnerClaimsPerTierPerAddress(string,uint256,address):(uint256)",
+      [
+        ethereum.Value.fromString(param0),
+        ethereum.Value.fromUnsignedBigInt(param1),
+        ethereum.Value.fromAddress(param2),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBytes());
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  partnerSaleActive(): boolean {
+  partnerSaleActive(param0: string): boolean {
     let result = super.call(
       "partnerSaleActive",
-      "partnerSaleActive():(bool)",
-      [],
+      "partnerSaleActive(string):(bool)",
+      [ethereum.Value.fromString(param0)],
     );
 
     return result[0].toBoolean();
   }
 
-  try_partnerSaleActive(): ethereum.CallResult<boolean> {
+  try_partnerSaleActive(param0: string): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "partnerSaleActive",
-      "partnerSaleActive():(bool)",
-      [],
+      "partnerSaleActive(string):(bool)",
+      [ethereum.Value.fromString(param0)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1118,18 +1438,120 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
+  partnerTiers(
+    param0: string,
+    param1: BigInt,
+  ): PlayFiLicenseSale__partnerTiersResult {
+    let result = super.call(
+      "partnerTiers",
+      "partnerTiers(string,uint256):(uint256,uint256,uint256,uint256)",
+      [
+        ethereum.Value.fromString(param0),
+        ethereum.Value.fromUnsignedBigInt(param1),
+      ],
+    );
+
+    return new PlayFiLicenseSale__partnerTiersResult(
+      result[0].toBigInt(),
+      result[1].toBigInt(),
+      result[2].toBigInt(),
+      result[3].toBigInt(),
+    );
+  }
+
+  try_partnerTiers(
+    param0: string,
+    param1: BigInt,
+  ): ethereum.CallResult<PlayFiLicenseSale__partnerTiersResult> {
+    let result = super.tryCall(
+      "partnerTiers",
+      "partnerTiers(string,uint256):(uint256,uint256,uint256,uint256)",
+      [
+        ethereum.Value.fromString(param0),
+        ethereum.Value.fromUnsignedBigInt(param1),
+      ],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new PlayFiLicenseSale__partnerTiersResult(
+        value[0].toBigInt(),
+        value[1].toBigInt(),
+        value[2].toBigInt(),
+        value[3].toBigInt(),
+      ),
+    );
+  }
+
+  paymentDetailsForPartnerReferral(
+    amount: BigInt,
+    tier: BigInt,
+    partnerCode: string,
+    referral: string,
+  ): PlayFiLicenseSale__paymentDetailsForPartnerReferralResult {
+    let result = super.call(
+      "paymentDetailsForPartnerReferral",
+      "paymentDetailsForPartnerReferral(uint256,uint256,string,string):(uint256,uint256,uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(amount),
+        ethereum.Value.fromUnsignedBigInt(tier),
+        ethereum.Value.fromString(partnerCode),
+        ethereum.Value.fromString(referral),
+      ],
+    );
+
+    return new PlayFiLicenseSale__paymentDetailsForPartnerReferralResult(
+      result[0].toBigInt(),
+      result[1].toBigInt(),
+      result[2].toBigInt(),
+    );
+  }
+
+  try_paymentDetailsForPartnerReferral(
+    amount: BigInt,
+    tier: BigInt,
+    partnerCode: string,
+    referral: string,
+  ): ethereum.CallResult<PlayFiLicenseSale__paymentDetailsForPartnerReferralResult> {
+    let result = super.tryCall(
+      "paymentDetailsForPartnerReferral",
+      "paymentDetailsForPartnerReferral(uint256,uint256,string,string):(uint256,uint256,uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(amount),
+        ethereum.Value.fromUnsignedBigInt(tier),
+        ethereum.Value.fromString(partnerCode),
+        ethereum.Value.fromString(referral),
+      ],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new PlayFiLicenseSale__paymentDetailsForPartnerReferralResult(
+        value[0].toBigInt(),
+        value[1].toBigInt(),
+        value[2].toBigInt(),
+      ),
+    );
+  }
+
   paymentDetailsForReferral(
     amount: BigInt,
     tier: BigInt,
     referral: string,
+    isWhitelist: boolean,
   ): PlayFiLicenseSale__paymentDetailsForReferralResult {
     let result = super.call(
       "paymentDetailsForReferral",
-      "paymentDetailsForReferral(uint256,uint256,string):(uint256,uint256,uint256)",
+      "paymentDetailsForReferral(uint256,uint256,string,bool):(uint256,uint256,uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(amount),
         ethereum.Value.fromUnsignedBigInt(tier),
         ethereum.Value.fromString(referral),
+        ethereum.Value.fromBoolean(isWhitelist),
       ],
     );
 
@@ -1144,14 +1566,16 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
     amount: BigInt,
     tier: BigInt,
     referral: string,
+    isWhitelist: boolean,
   ): ethereum.CallResult<PlayFiLicenseSale__paymentDetailsForReferralResult> {
     let result = super.tryCall(
       "paymentDetailsForReferral",
-      "paymentDetailsForReferral(uint256,uint256,string):(uint256,uint256,uint256)",
+      "paymentDetailsForReferral(uint256,uint256,string,bool):(uint256,uint256,uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(amount),
         ethereum.Value.fromUnsignedBigInt(tier),
         ethereum.Value.fromString(referral),
+        ethereum.Value.fromBoolean(isWhitelist),
       ],
     );
     if (result.reverted) {
@@ -1190,6 +1614,29 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  publicMerkleRoot(): Bytes {
+    let result = super.call(
+      "publicMerkleRoot",
+      "publicMerkleRoot():(bytes32)",
+      [],
+    );
+
+    return result[0].toBytes();
+  }
+
+  try_publicMerkleRoot(): ethereum.CallResult<Bytes> {
+    let result = super.tryCall(
+      "publicMerkleRoot",
+      "publicMerkleRoot():(bytes32)",
+      [],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBytes());
+  }
+
   publicSaleActive(): boolean {
     let result = super.call(
       "publicSaleActive",
@@ -1211,6 +1658,35 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  publicWhitelistClaimsPerAddressAndReferral(
+    param0: Address,
+    param1: string,
+  ): BigInt {
+    let result = super.call(
+      "publicWhitelistClaimsPerAddressAndReferral",
+      "publicWhitelistClaimsPerAddressAndReferral(address,string):(uint256)",
+      [ethereum.Value.fromAddress(param0), ethereum.Value.fromString(param1)],
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_publicWhitelistClaimsPerAddressAndReferral(
+    param0: Address,
+    param1: string,
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "publicWhitelistClaimsPerAddressAndReferral",
+      "publicWhitelistClaimsPerAddressAndReferral(address,string):(uint256)",
+      [ethereum.Value.fromAddress(param0), ethereum.Value.fromString(param1)],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   referrals(param0: string): PlayFiLicenseSale__referralsResult {
@@ -1429,6 +1905,43 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
+
+  whitelistTiers(param0: BigInt): PlayFiLicenseSale__whitelistTiersResult {
+    let result = super.call(
+      "whitelistTiers",
+      "whitelistTiers(uint256):(uint256,uint256,uint256,uint256)",
+      [ethereum.Value.fromUnsignedBigInt(param0)],
+    );
+
+    return new PlayFiLicenseSale__whitelistTiersResult(
+      result[0].toBigInt(),
+      result[1].toBigInt(),
+      result[2].toBigInt(),
+      result[3].toBigInt(),
+    );
+  }
+
+  try_whitelistTiers(
+    param0: BigInt,
+  ): ethereum.CallResult<PlayFiLicenseSale__whitelistTiersResult> {
+    let result = super.tryCall(
+      "whitelistTiers",
+      "whitelistTiers(uint256):(uint256,uint256,uint256,uint256)",
+      [ethereum.Value.fromUnsignedBigInt(param0)],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new PlayFiLicenseSale__whitelistTiersResult(
+        value[0].toBigInt(),
+        value[1].toBigInt(),
+        value[2].toBigInt(),
+        value[3].toBigInt(),
+      ),
+    );
+  }
 }
 
 export class ConstructorCall extends ethereum.Call {
@@ -1554,12 +2067,16 @@ export class ClaimLicensePartnerCall__Inputs {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get data(): Bytes {
-    return this._call.inputValues[1].value.toBytes();
+  get tier(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
   }
 
-  get merkleProof(): Array<Bytes> {
-    return this._call.inputValues[2].value.toBytesArray();
+  get partnerCode(): string {
+    return this._call.inputValues[2].value.toString();
+  }
+
+  get referral(): string {
+    return this._call.inputValues[3].value.toString();
   }
 }
 
@@ -1605,6 +2122,48 @@ export class ClaimLicensePublicCall__Outputs {
   _call: ClaimLicensePublicCall;
 
   constructor(call: ClaimLicensePublicCall) {
+    this._call = call;
+  }
+}
+
+export class ClaimLicensePublicWhitelistCall extends ethereum.Call {
+  get inputs(): ClaimLicensePublicWhitelistCall__Inputs {
+    return new ClaimLicensePublicWhitelistCall__Inputs(this);
+  }
+
+  get outputs(): ClaimLicensePublicWhitelistCall__Outputs {
+    return new ClaimLicensePublicWhitelistCall__Outputs(this);
+  }
+}
+
+export class ClaimLicensePublicWhitelistCall__Inputs {
+  _call: ClaimLicensePublicWhitelistCall;
+
+  constructor(call: ClaimLicensePublicWhitelistCall) {
+    this._call = call;
+  }
+
+  get amount(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get tier(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get data(): Bytes {
+    return this._call.inputValues[2].value.toBytes();
+  }
+
+  get merkleProof(): Array<Bytes> {
+    return this._call.inputValues[3].value.toBytesArray();
+  }
+}
+
+export class ClaimLicensePublicWhitelistCall__Outputs {
+  _call: ClaimLicensePublicWhitelistCall;
+
+  constructor(call: ClaimLicensePublicWhitelistCall) {
     this._call = call;
   }
 }
@@ -1911,36 +2470,6 @@ export class SetFriendsFamilySaleCall__Outputs {
   }
 }
 
-export class SetPartnerMerkleRootCall extends ethereum.Call {
-  get inputs(): SetPartnerMerkleRootCall__Inputs {
-    return new SetPartnerMerkleRootCall__Inputs(this);
-  }
-
-  get outputs(): SetPartnerMerkleRootCall__Outputs {
-    return new SetPartnerMerkleRootCall__Outputs(this);
-  }
-}
-
-export class SetPartnerMerkleRootCall__Inputs {
-  _call: SetPartnerMerkleRootCall;
-
-  constructor(call: SetPartnerMerkleRootCall) {
-    this._call = call;
-  }
-
-  get _partnerMerkleRoot(): Bytes {
-    return this._call.inputValues[0].value.toBytes();
-  }
-}
-
-export class SetPartnerMerkleRootCall__Outputs {
-  _call: SetPartnerMerkleRootCall;
-
-  constructor(call: SetPartnerMerkleRootCall) {
-    this._call = call;
-  }
-}
-
 export class SetPartnerSaleCall extends ethereum.Call {
   get inputs(): SetPartnerSaleCall__Inputs {
     return new SetPartnerSaleCall__Inputs(this);
@@ -1958,8 +2487,12 @@ export class SetPartnerSaleCall__Inputs {
     this._call = call;
   }
 
+  get partnerCode(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
   get status(): boolean {
-    return this._call.inputValues[0].value.toBoolean();
+    return this._call.inputValues[1].value.toBoolean();
   }
 }
 
@@ -1967,6 +2500,82 @@ export class SetPartnerSaleCall__Outputs {
   _call: SetPartnerSaleCall;
 
   constructor(call: SetPartnerSaleCall) {
+    this._call = call;
+  }
+}
+
+export class SetPartnerTiersCall extends ethereum.Call {
+  get inputs(): SetPartnerTiersCall__Inputs {
+    return new SetPartnerTiersCall__Inputs(this);
+  }
+
+  get outputs(): SetPartnerTiersCall__Outputs {
+    return new SetPartnerTiersCall__Outputs(this);
+  }
+}
+
+export class SetPartnerTiersCall__Inputs {
+  _call: SetPartnerTiersCall;
+
+  constructor(call: SetPartnerTiersCall) {
+    this._call = call;
+  }
+
+  get partnerCodes(): Array<string> {
+    return this._call.inputValues[0].value.toStringArray();
+  }
+
+  get ids(): Array<BigInt> {
+    return this._call.inputValues[1].value.toBigIntArray();
+  }
+
+  get prices(): Array<BigInt> {
+    return this._call.inputValues[2].value.toBigIntArray();
+  }
+
+  get individualCaps(): Array<BigInt> {
+    return this._call.inputValues[3].value.toBigIntArray();
+  }
+
+  get totalCaps(): Array<BigInt> {
+    return this._call.inputValues[4].value.toBigIntArray();
+  }
+}
+
+export class SetPartnerTiersCall__Outputs {
+  _call: SetPartnerTiersCall;
+
+  constructor(call: SetPartnerTiersCall) {
+    this._call = call;
+  }
+}
+
+export class SetPublicMerkleRootCall extends ethereum.Call {
+  get inputs(): SetPublicMerkleRootCall__Inputs {
+    return new SetPublicMerkleRootCall__Inputs(this);
+  }
+
+  get outputs(): SetPublicMerkleRootCall__Outputs {
+    return new SetPublicMerkleRootCall__Outputs(this);
+  }
+}
+
+export class SetPublicMerkleRootCall__Inputs {
+  _call: SetPublicMerkleRootCall;
+
+  constructor(call: SetPublicMerkleRootCall) {
+    this._call = call;
+  }
+
+  get _publicMerkleRoot(): Bytes {
+    return this._call.inputValues[0].value.toBytes();
+  }
+}
+
+export class SetPublicMerkleRootCall__Outputs {
+  _call: SetPublicMerkleRootCall;
+
+  constructor(call: SetPublicMerkleRootCall) {
     this._call = call;
   }
 }
@@ -2141,6 +2750,48 @@ export class SetTiersCall__Outputs {
   _call: SetTiersCall;
 
   constructor(call: SetTiersCall) {
+    this._call = call;
+  }
+}
+
+export class SetWhitelistTiersCall extends ethereum.Call {
+  get inputs(): SetWhitelistTiersCall__Inputs {
+    return new SetWhitelistTiersCall__Inputs(this);
+  }
+
+  get outputs(): SetWhitelistTiersCall__Outputs {
+    return new SetWhitelistTiersCall__Outputs(this);
+  }
+}
+
+export class SetWhitelistTiersCall__Inputs {
+  _call: SetWhitelistTiersCall;
+
+  constructor(call: SetWhitelistTiersCall) {
+    this._call = call;
+  }
+
+  get ids(): Array<BigInt> {
+    return this._call.inputValues[0].value.toBigIntArray();
+  }
+
+  get prices(): Array<BigInt> {
+    return this._call.inputValues[1].value.toBigIntArray();
+  }
+
+  get individualCaps(): Array<BigInt> {
+    return this._call.inputValues[2].value.toBigIntArray();
+  }
+
+  get totalCaps(): Array<BigInt> {
+    return this._call.inputValues[3].value.toBigIntArray();
+  }
+}
+
+export class SetWhitelistTiersCall__Outputs {
+  _call: SetWhitelistTiersCall;
+
+  constructor(call: SetWhitelistTiersCall) {
     this._call = call;
   }
 }

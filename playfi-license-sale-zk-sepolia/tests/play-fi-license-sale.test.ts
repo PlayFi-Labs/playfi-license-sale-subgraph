@@ -14,21 +14,21 @@ import {
   createContractInitializedEvent, createEarlyAccessLicensesClaimedEvent,
   createEarlyAccessSaleStatusSetEvent, createFriendsFamilyLicensesClaimedEvent,
   createFriendsFamilySaleStatusSetEvent, createPartnerLicensesClaimedEvent,
-  createPartnerSaleStatusSetEvent, createPublicLicensesClaimedEvent,
-  createPublicSaleStatusSetEvent,
+  createPartnerSaleStatusSetEvent, createPartnerTierSetEvent, createPublicLicensesClaimedEvent,
+  createPublicSaleStatusSetEvent, createPublicWhitelistLicensesClaimedEvent,
   createReferralUpdatedEvent, createTeamLicensesClaimedEvent,
-  createTeamSaleStatusSetEvent, createTierSetEvent
+  createTeamSaleStatusSetEvent, createTierSetEvent, createWhitelistTierSetEvent
 } from "./play-fi-license-sale-utils"
 import {
   handleCommissionPaid,
   handleContractInitialized, handleEarlyAccessLicensesClaimed,
   handleEarlyAccessSaleStatusSet, handleFriendsFamilyLicensesClaimed,
   handleFriendsFamilySaleStatusSet, handlePartnerLicensesClaimed,
-  handlePartnerSaleStatusSet,
+  handlePartnerSaleStatusSet, handlePartnerTierSet,
   handlePublicLicensesClaimed,
-  handlePublicSaleStatusSet,
+  handlePublicSaleStatusSet, handlePublicWhitelistLicensesClaimed,
   handleReferralUpdated, handleTeamLicensesClaimed,
-  handleTeamSaleStatusSet, handleTierSet
+  handleTeamSaleStatusSet, handleTierSet, handleWhitelistTierSet
 } from "../src/play-fi-license-sale";
 
 import { log } from '@graphprotocol/graph-ts'
@@ -40,12 +40,12 @@ import {PublicLicensesClaimed} from "../generated/PlayFiLicenseSale/PlayFiLicens
 
 describe("ContractInitialized sets up the correct start state", () => {
   beforeAll(() => {
-  /*  let previousAdmin = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
-    )
-    let newAdmin = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
-    )*/
+    /*  let previousAdmin = Address.fromString(
+        "0x0000000000000000000000000000000000000001"
+      )
+      let newAdmin = Address.fromString(
+        "0x0000000000000000000000000000000000000001"
+      )*/
     let newContractInitializedEvent = createContractInitializedEvent()
     handleContractInitialized(newContractInitializedEvent)
   })
@@ -58,7 +58,7 @@ describe("ContractInitialized sets up the correct start state", () => {
 
     assert.entityCount("Stat", 1)
 
-     assert.fieldEquals(
+    assert.fieldEquals(
         "Stat",
         "0",
         "totalClaims",
@@ -71,78 +71,78 @@ describe("ContractInitialized sets up the correct start state", () => {
         "totalProceeds",
         "0"
     )
+
+    assert.fieldEquals(
+        "Stat",
+        "0",
+        "publicProceeds",
+        "0"
+    )
+
+    assert.fieldEquals(
+        "Stat",
+        "0",
+        "publicClaims",
+        "0"
+    )
   })
 
   test("Phase entities checks out", () => {
 
-    assert.entityCount("Phase", 5)
+    assert.entityCount("Phase", 4)
 
     assert.fieldEquals(
         "Phase",
-        "0",
+        "team",
         "name",
         "team"
     )
 
     assert.fieldEquals(
         "Phase",
-        "0",
+        "team",
         "active",
         "false"
     )
 
     assert.fieldEquals(
         "Phase",
-        "1",
+        "friends_family",
         "name",
         "friends_family"
     )
 
     assert.fieldEquals(
         "Phase",
-        "1",
+        "friends_family",
         "active",
         "false"
     )
 
     assert.fieldEquals(
         "Phase",
-        "2",
+        "early_access",
         "name",
         "early_access"
     )
 
     assert.fieldEquals(
         "Phase",
-        "2",
+        "early_access",
         "active",
         "false"
     )
 
     assert.fieldEquals(
         "Phase",
-        "3",
-        "name",
-        "partner"
-    )
-
-    assert.fieldEquals(
-        "Phase",
-        "3",
-        "active",
-        "false"
-    )
-
-    assert.fieldEquals(
-        "Phase",
-        "4",
+        "public",
         "name",
         "public"
     )
 
     assert.fieldEquals(
         "Phase",
-        "4",
+        "public",
         "active",
         "false"
     )
@@ -165,7 +165,7 @@ describe("TeamSaleStatusSet sets the correct team sale status", () => {
 
     assert.fieldEquals(
         "Phase",
-        "0",
+        "team",
         "active",
         "false"
     )
@@ -175,7 +175,7 @@ describe("TeamSaleStatusSet sets the correct team sale status", () => {
 
     assert.fieldEquals(
         "Phase",
-        "0",
+        "team",
         "active",
         "true"
     )
@@ -186,7 +186,7 @@ describe("TeamSaleStatusSet sets the correct team sale status", () => {
 
     assert.fieldEquals(
         "Phase",
-        "0",
+        "team",
         "active",
         "true"
     )
@@ -196,7 +196,7 @@ describe("TeamSaleStatusSet sets the correct team sale status", () => {
 
     assert.fieldEquals(
         "Phase",
-        "0",
+        "team",
         "active",
         "false"
     )
@@ -219,7 +219,7 @@ describe("FriendsFamilySaleStatusSet sets the correct friends and family sale st
 
     assert.fieldEquals(
         "Phase",
-        "1",
+        "friends_family",
         "active",
         "false"
     )
@@ -229,7 +229,7 @@ describe("FriendsFamilySaleStatusSet sets the correct friends and family sale st
 
     assert.fieldEquals(
         "Phase",
-        "1",
+        "friends_family",
         "active",
         "true"
     )
@@ -240,7 +240,7 @@ describe("FriendsFamilySaleStatusSet sets the correct friends and family sale st
 
     assert.fieldEquals(
         "Phase",
-        "1",
+        "friends_family",
         "active",
         "true"
     )
@@ -250,7 +250,7 @@ describe("FriendsFamilySaleStatusSet sets the correct friends and family sale st
 
     assert.fieldEquals(
         "Phase",
-        "1",
+        "friends_family",
         "active",
         "false"
     )
@@ -273,7 +273,7 @@ describe("EarlyAccessSaleStatusSet sets the correct early access sale status", (
 
     assert.fieldEquals(
         "Phase",
-        "2",
+        "early_access",
         "active",
         "false"
     )
@@ -283,7 +283,7 @@ describe("EarlyAccessSaleStatusSet sets the correct early access sale status", (
 
     assert.fieldEquals(
         "Phase",
-        "2",
+        "early_access",
         "active",
         "true"
     )
@@ -294,7 +294,7 @@ describe("EarlyAccessSaleStatusSet sets the correct early access sale status", (
 
     assert.fieldEquals(
         "Phase",
-        "2",
+        "early_access",
         "active",
         "true"
     )
@@ -304,7 +304,7 @@ describe("EarlyAccessSaleStatusSet sets the correct early access sale status", (
 
     assert.fieldEquals(
         "Phase",
-        "2",
+        "early_access",
         "active",
         "false"
     )
@@ -325,19 +325,22 @@ describe("PartnerSaleStatusSet sets the correct partner sale status", () => {
 
   test("State is set to true", () => {
 
-    assert.fieldEquals(
-        "Phase",
-        "3",
-        "active",
-        "false"
-    )
-
-    let newPartnerSaleStatusSetEvent = createPartnerSaleStatusSetEvent(true)
+    let newPartnerSaleStatusSetEvent = createPartnerSaleStatusSetEvent(false,"POLYGON")
     handlePartnerSaleStatusSet(newPartnerSaleStatusSetEvent)
 
     assert.fieldEquals(
         "Phase",
-        "3",
+        "partner_POLYGON",
+        "active",
+        "false"
+    )
+
+    newPartnerSaleStatusSetEvent = createPartnerSaleStatusSetEvent(true,"POLYGON")
+    handlePartnerSaleStatusSet(newPartnerSaleStatusSetEvent)
+
+    assert.fieldEquals(
+        "Phase",
+        "partner_POLYGON",
         "active",
         "true"
     )
@@ -346,19 +349,22 @@ describe("PartnerSaleStatusSet sets the correct partner sale status", () => {
 
   test("State is set to false", () => {
 
-    assert.fieldEquals(
-        "Phase",
-        "3",
-        "active",
-        "true"
-    )
-
-    let newPartnerSaleStatusSetEvent = createPartnerSaleStatusSetEvent(false)
+    let newPartnerSaleStatusSetEvent = createPartnerSaleStatusSetEvent(true,"POLYGON")
     handlePartnerSaleStatusSet(newPartnerSaleStatusSetEvent)
 
     assert.fieldEquals(
         "Phase",
-        "3",
+        "partner_POLYGON",
+        "active",
+        "true"
+    )
+
+    newPartnerSaleStatusSetEvent = createPartnerSaleStatusSetEvent(false, "POLYGON")
+    handlePartnerSaleStatusSet(newPartnerSaleStatusSetEvent)
+
+    assert.fieldEquals(
+        "Phase",
+        "partner_POLYGON",
         "active",
         "false"
     )
@@ -381,7 +387,7 @@ describe("PublicSaleStatusSet sets the correct public sale status", () => {
 
     assert.fieldEquals(
         "Phase",
-        "4",
+        "public",
         "active",
         "false"
     )
@@ -391,7 +397,7 @@ describe("PublicSaleStatusSet sets the correct public sale status", () => {
 
     assert.fieldEquals(
         "Phase",
-        "4",
+        "public",
         "active",
         "true"
     )
@@ -402,7 +408,7 @@ describe("PublicSaleStatusSet sets the correct public sale status", () => {
 
     assert.fieldEquals(
         "Phase",
-        "4",
+        "public",
         "active",
         "true"
     )
@@ -412,7 +418,7 @@ describe("PublicSaleStatusSet sets the correct public sale status", () => {
 
     assert.fieldEquals(
         "Phase",
-        "4",
+        "public",
         "active",
         "false"
     )
@@ -672,37 +678,44 @@ describe("TierSet sets the correct tier settings", () => {
 
     assert.fieldEquals(
         "Tier",
-        "1",
+        "public_1",
         "claimed",
         "0"
     )
 
     assert.fieldEquals(
         "Tier",
-        "1",
+        "public_1",
         "number",
         "1"
     )
 
     assert.fieldEquals(
         "Tier",
-        "1",
+        "public_1",
         "price",
         "1000"
     )
 
     assert.fieldEquals(
         "Tier",
-        "1",
+        "public_1",
         "individualCap",
         "5"
     )
 
     assert.fieldEquals(
         "Tier",
-        "1",
+        "public_1",
         "totalCap",
         "100"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "public_1",
+        "type",
+        "public"
     )
 
   })
@@ -714,37 +727,264 @@ describe("TierSet sets the correct tier settings", () => {
 
     assert.fieldEquals(
         "Tier",
-        "1",
+        "public_1",
         "claimed",
         "0"
     )
 
     assert.fieldEquals(
         "Tier",
-        "1",
+        "public_1",
         "number",
         "1"
     )
 
     assert.fieldEquals(
         "Tier",
-        "1",
+        "public_1",
         "price",
         "2000"
     )
 
     assert.fieldEquals(
         "Tier",
-        "1",
+        "public_1",
         "individualCap",
         "10"
     )
 
     assert.fieldEquals(
         "Tier",
-        "1",
+        "public_1",
         "totalCap",
         "500"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "public_1",
+        "type",
+        "public"
+    )
+
+  })
+
+})
+
+describe("WhitelistTierSet sets the correct whitelist tier settings", () => {
+  beforeAll(() => {
+    let newContractInitializedEvent = createContractInitializedEvent()
+    handleContractInitialized(newContractInitializedEvent)
+  })
+
+  afterAll(() => {
+    clearStore()
+  })
+
+  test("Whitelist tier is correctly initialized", () => {
+
+    let newTierSetEvent = createWhitelistTierSetEvent(BigInt.fromI32(1), BigInt.fromI32(1000), BigInt.fromI32(5), BigInt.fromI32(0), BigInt.fromI32(100))
+    handleWhitelistTierSet(newTierSetEvent)
+
+    assert.fieldEquals(
+        "Tier",
+        "whitelist_1",
+        "claimed",
+        "0"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "whitelist_1",
+        "number",
+        "1"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "whitelist_1",
+        "price",
+        "1000"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "whitelist_1",
+        "individualCap",
+        "5"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "whitelist_1",
+        "totalCap",
+        "100"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "whitelist_1",
+        "type",
+        "whitelist"
+    )
+
+  })
+
+  test("Existing whitelist tier is correctly modified", () => {
+
+    let newTierSetEvent = createWhitelistTierSetEvent(BigInt.fromI32(1), BigInt.fromI32(2000), BigInt.fromI32(10), BigInt.fromI32(0), BigInt.fromI32(500))
+    handleWhitelistTierSet(newTierSetEvent)
+
+    assert.fieldEquals(
+        "Tier",
+        "whitelist_1",
+        "claimed",
+        "0"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "whitelist_1",
+        "number",
+        "1"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "whitelist_1",
+        "price",
+        "2000"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "whitelist_1",
+        "individualCap",
+        "10"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "whitelist_1",
+        "totalCap",
+        "500"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "whitelist_1",
+        "type",
+        "whitelist"
+    )
+
+  })
+
+})
+
+describe("PartnerTierSet sets the correct partner tier settings", () => {
+  beforeAll(() => {
+    let newContractInitializedEvent = createContractInitializedEvent()
+    handleContractInitialized(newContractInitializedEvent)
+  })
+
+  afterAll(() => {
+    clearStore()
+  })
+
+  test("Partner tier is correctly initialized", () => {
+
+    let newTierSetEvent = createPartnerTierSetEvent("POLYGON",BigInt.fromI32(1), BigInt.fromI32(1000), BigInt.fromI32(5), BigInt.fromI32(0), BigInt.fromI32(100))
+    handlePartnerTierSet(newTierSetEvent)
+
+    assert.fieldEquals(
+        "Tier",
+        "partner_POLYGON_1",
+        "claimed",
+        "0"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "partner_POLYGON_1",
+        "number",
+        "1"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "partner_POLYGON_1",
+        "price",
+        "1000"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "partner_POLYGON_1",
+        "individualCap",
+        "5"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "partner_POLYGON_1",
+        "totalCap",
+        "100"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "partner_POLYGON_1",
+        "type",
+        "partner_POLYGON"
+    )
+
+  })
+
+  test("Existing partner tier is correctly modified", () => {
+
+    let newTierSetEvent = createPartnerTierSetEvent("POLYGON",BigInt.fromI32(1), BigInt.fromI32(2000), BigInt.fromI32(10), BigInt.fromI32(0), BigInt.fromI32(500))
+    handlePartnerTierSet(newTierSetEvent)
+
+    assert.fieldEquals(
+        "Tier",
+        "partner_POLYGON_1",
+        "claimed",
+        "0"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "partner_POLYGON_1",
+        "number",
+        "1"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "partner_POLYGON_1",
+        "price",
+        "2000"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "partner_POLYGON_1",
+        "individualCap",
+        "10"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "partner_POLYGON_1",
+        "totalCap",
+        "500"
+    )
+
+    assert.fieldEquals(
+        "Tier",
+        "partner_POLYGON_1",
+        "type",
+        "partner_POLYGON"
     )
 
   })
@@ -858,7 +1098,7 @@ describe("PublicLicensesClaimed does the correct updates upon public license cla
         "Claim",
         newPublicLicensesClaimedEvent.transaction.hash.toHex() + "-" + newPublicLicensesClaimedEvent.transactionLogIndex.toString(),
         "tier",
-        "1"
+        "public_1"
     )
 
     assert.fieldEquals(
@@ -886,7 +1126,7 @@ describe("PublicLicensesClaimed does the correct updates upon public license cla
         "Claim",
         newPublicLicensesClaimedEvent.transaction.hash.toHex() + "-" + newPublicLicensesClaimedEvent.transactionLogIndex.toString(),
         "phase",
-        "4"
+        "public"
     )
 
     assert.fieldEquals(
@@ -905,7 +1145,7 @@ describe("PublicLicensesClaimed does the correct updates upon public license cla
 
     assert.fieldEquals(
         "Tier",
-        "1",
+        "public_1",
         "claimed",
         "100"
     )
@@ -931,6 +1171,154 @@ describe("PublicLicensesClaimed does the correct updates upon public license cla
         "1000"
     )
 
+    assert.fieldEquals(
+        "Stat",
+        "0",
+        "publicClaims",
+        "100"
+    )
+
+    assert.fieldEquals(
+        "Stat",
+        "0",
+        "publicProceeds",
+        "1000"
+    )
+
+  })
+
+})
+
+describe("PublicWhitelistLicensesClaimed does the correct updates upon public license claims", () => {
+
+  beforeEach(() => {
+    let newContractInitializedEvent = createContractInitializedEvent()
+    handleContractInitialized(newContractInitializedEvent)
+    let newTierSetEvent = createWhitelistTierSetEvent(BigInt.fromI32(1), BigInt.fromI32(2000), BigInt.fromI32(10), BigInt.fromI32(0), BigInt.fromI32(500))
+    handleWhitelistTierSet(newTierSetEvent)
+  })
+
+  afterEach(() => {
+    clearStore()
+  })
+
+  test("Account is updated correctly", () => {
+
+    let newPublicWhitelistLicensesClaimedEvent = createPublicWhitelistLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100), BigInt.fromU32(1),BigInt.fromI32(1000),"")
+    handlePublicWhitelistLicensesClaimed(newPublicWhitelistLicensesClaimedEvent)
+
+    assert.fieldEquals(
+        "Account",
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase(),
+        "totalLicenses",
+        "100"
+    )
+
+    assert.fieldEquals(
+        "Account",
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase(),
+        "totalPaid",
+        "1000"
+    )
+
+  })
+
+  test("Claims updated correctly", () => {
+
+    let newPublicWhitelistLicensesClaimedEvent = createPublicWhitelistLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100), BigInt.fromU32(1),BigInt.fromI32(1000),"")
+    handlePublicWhitelistLicensesClaimed(newPublicWhitelistLicensesClaimedEvent)
+
+    assert.fieldEquals(
+        "Claim",
+        newPublicWhitelistLicensesClaimedEvent.transaction.hash.toHex() + "-" + newPublicWhitelistLicensesClaimedEvent.transactionLogIndex.toString(),
+        "tier",
+        "whitelist_1"
+    )
+
+    assert.fieldEquals(
+        "Claim",
+        newPublicWhitelistLicensesClaimedEvent.transaction.hash.toHex() + "-" + newPublicWhitelistLicensesClaimedEvent.transactionLogIndex.toString(),
+        "account",
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase()
+    )
+
+    assert.fieldEquals(
+        "Claim",
+        newPublicWhitelistLicensesClaimedEvent.transaction.hash.toHex() + "-" + newPublicWhitelistLicensesClaimedEvent.transactionLogIndex.toString(),
+        "amount",
+        "100"
+    )
+
+    assert.fieldEquals(
+        "Claim",
+        newPublicWhitelistLicensesClaimedEvent.transaction.hash.toHex() + "-" + newPublicWhitelistLicensesClaimedEvent.transactionLogIndex.toString(),
+        "paid",
+        "1000"
+    )
+
+    assert.fieldEquals(
+        "Claim",
+        newPublicWhitelistLicensesClaimedEvent.transaction.hash.toHex() + "-" + newPublicWhitelistLicensesClaimedEvent.transactionLogIndex.toString(),
+        "phase",
+        "public"
+    )
+
+    assert.fieldEquals(
+        "Claim",
+        newPublicWhitelistLicensesClaimedEvent.transaction.hash.toHex() + "-" + newPublicWhitelistLicensesClaimedEvent.transactionLogIndex.toString(),
+        "referral",
+        "null"
+    )
+
+  })
+
+  test("Tier is updated correctly", () => {
+
+    let newPublicWhitelistLicensesClaimedEvent = createPublicWhitelistLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100), BigInt.fromU32(1),BigInt.fromI32(1000),"")
+    handlePublicWhitelistLicensesClaimed(newPublicWhitelistLicensesClaimedEvent)
+
+    assert.fieldEquals(
+        "Tier",
+        "whitelist_1",
+        "claimed",
+        "100"
+    )
+
+  })
+
+  test("Stats are updated correctly", () => {
+
+    let newPublicWhitelistLicensesClaimedEvent = createPublicWhitelistLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100), BigInt.fromU32(1),BigInt.fromI32(1000),"")
+    handlePublicWhitelistLicensesClaimed(newPublicWhitelistLicensesClaimedEvent)
+
+    assert.fieldEquals(
+        "Stat",
+        "0",
+        "totalClaims",
+        "100"
+    )
+
+    assert.fieldEquals(
+        "Stat",
+        "0",
+        "totalProceeds",
+        "1000"
+    )
+
+    assert.fieldEquals(
+        "Stat",
+        "0",
+        "publicClaims",
+        "100"
+    )
+
+    assert.fieldEquals(
+        "Stat",
+        "0",
+        "publicProceeds",
+        "1000"
+    )
+
   })
 
 })
@@ -941,8 +1329,8 @@ describe("PartnerLicensesClaimed does the correct updates upon partner license c
   beforeEach(() => {
     let newContractInitializedEvent = createContractInitializedEvent()
     handleContractInitialized(newContractInitializedEvent)
-    let newTierSetEvent = createTierSetEvent(BigInt.fromI32(1), BigInt.fromI32(2000), BigInt.fromI32(10), BigInt.fromI32(0), BigInt.fromI32(500))
-    handleTierSet(newTierSetEvent)
+    let newTierSetEvent = createPartnerTierSetEvent("POLYGON",BigInt.fromI32(1), BigInt.fromI32(2000), BigInt.fromI32(10), BigInt.fromI32(0), BigInt.fromI32(500))
+    handlePartnerTierSet(newTierSetEvent)
   })
 
   afterEach(() => {
@@ -951,7 +1339,7 @@ describe("PartnerLicensesClaimed does the correct updates upon partner license c
 
   test("Account is updated correctly", () => {
 
-    let newPartnerLicensesClaimedEvent = createPartnerLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(1000), BigInt.fromI32(100))
+    let newPartnerLicensesClaimedEvent = createPartnerLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100), BigInt.fromI32(1), BigInt.fromI32(1000), "POLYGON", "REFERRAL")
     handlePartnerLicensesClaimed(newPartnerLicensesClaimedEvent)
 
     assert.fieldEquals(
@@ -972,7 +1360,7 @@ describe("PartnerLicensesClaimed does the correct updates upon partner license c
 
   test("Claims updated correctly", () => {
 
-    let newPartnerLicensesClaimedEvent = createPartnerLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(1000), BigInt.fromI32(100))
+    let newPartnerLicensesClaimedEvent = createPartnerLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100), BigInt.fromI32(1), BigInt.fromI32(1000), "POLYGON", "REFERRAL")
     handlePartnerLicensesClaimed(newPartnerLicensesClaimedEvent)
 
 
@@ -1001,15 +1389,57 @@ describe("PartnerLicensesClaimed does the correct updates upon partner license c
         "Claim",
         newPartnerLicensesClaimedEvent.transaction.hash.toHex() + "-" + newPartnerLicensesClaimedEvent.transactionLogIndex.toString(),
         "phase",
-        "3"
+        "partner_POLYGON"
+    )
+
+    assert.fieldEquals(
+        "Claim",
+        newPartnerLicensesClaimedEvent.transaction.hash.toHex() + "-" + newPartnerLicensesClaimedEvent.transactionLogIndex.toString(),
+        "tier",
+        "partner_POLYGON_1"
+    )
+
+    assert.fieldEquals(
+        "Claim",
+        newPartnerLicensesClaimedEvent.transaction.hash.toHex() + "-" + newPartnerLicensesClaimedEvent.transactionLogIndex.toString(),
+        "referral",
+        "REFERRAL"
+    )
+
+    assert.fieldEquals(
+        "Stat",
+        "0",
+        "publicClaims",
+        "0"
+    )
+
+    assert.fieldEquals(
+        "Stat",
+        "0",
+        "publicProceeds",
+        "0"
+    )
+
+  })
+
+  test("Tier is updated correctly", () => {
+
+    let newPartnerLicensesClaimedEvent = createPartnerLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100), BigInt.fromI32(1), BigInt.fromI32(1000), "POLYGON", "REFERRAL")
+    handlePartnerLicensesClaimed(newPartnerLicensesClaimedEvent)
+
+    assert.fieldEquals(
+        "Tier",
+        "partner_POLYGON_1",
+        "claimed",
+        "100"
     )
 
   })
 
   test("Stats are updated correctly", () => {
 
-    let newPublicLicensesClaimedEvent = createPublicLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100), BigInt.fromU32(1),BigInt.fromI32(1000),"")
-    handlePublicLicensesClaimed(newPublicLicensesClaimedEvent)
+    let newPartnerLicensesClaimedEvent = createPartnerLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100), BigInt.fromI32(1), BigInt.fromI32(1000), "POLYGON", "REFERRAL")
+    handlePartnerLicensesClaimed(newPartnerLicensesClaimedEvent)
 
     assert.fieldEquals(
         "Stat",
@@ -1094,7 +1524,7 @@ describe("EarlyAccessLicensesClaimed does the correct updates upon early access 
         "Claim",
         newEarlyAccessLicensesClaimedEvent.transaction.hash.toHex() + "-" + newEarlyAccessLicensesClaimedEvent.transactionLogIndex.toString(),
         "phase",
-        "2"
+        "early_access"
     )
 
   })
@@ -1116,6 +1546,20 @@ describe("EarlyAccessLicensesClaimed does the correct updates upon early access 
         "0",
         "totalProceeds",
         "1000"
+    )
+
+    assert.fieldEquals(
+        "Stat",
+        "0",
+        "publicClaims",
+        "0"
+    )
+
+    assert.fieldEquals(
+        "Stat",
+        "0",
+        "publicProceeds",
+        "0"
     )
 
   })
@@ -1187,7 +1631,7 @@ describe("FriendsFamilyLicensesClaimed does the correct updates upon friends and
         "Claim",
         newFriendsFamilyLicensesClaimedEvent.transaction.hash.toHex() + "-" + newFriendsFamilyLicensesClaimedEvent.transactionLogIndex.toString(),
         "phase",
-        "1"
+        "friends_family"
     )
 
   })
@@ -1209,6 +1653,19 @@ describe("FriendsFamilyLicensesClaimed does the correct updates upon friends and
         "0",
         "totalProceeds",
         "1000"
+    )
+    assert.fieldEquals(
+        "Stat",
+        "0",
+        "publicClaims",
+        "0"
+    )
+
+    assert.fieldEquals(
+        "Stat",
+        "0",
+        "publicProceeds",
+        "0"
     )
 
   })
@@ -1280,7 +1737,7 @@ describe("TeamLicensesClaimed does the correct updates upon team license claims"
         "Claim",
         newTeamLicensesClaimedEvent.transaction.hash.toHex() + "-" + newTeamLicensesClaimedEvent.transactionLogIndex.toString(),
         "phase",
-        "0"
+        "team"
     )
 
   })
@@ -1301,6 +1758,20 @@ describe("TeamLicensesClaimed does the correct updates upon team license claims"
         "Stat",
         "0",
         "totalProceeds",
+        "0"
+    )
+
+    assert.fieldEquals(
+        "Stat",
+        "0",
+        "publicClaims",
+        "0"
+    )
+
+    assert.fieldEquals(
+        "Stat",
+        "0",
+        "publicProceeds",
         "0"
     )
 

@@ -1,5 +1,6 @@
 type Tier @entity {
     id: ID!
+    type: String!
     number: BigInt!
     claimed: BigInt!
     price: BigInt!
@@ -17,6 +18,8 @@ type Stat @entity {
     id: ID!
     totalClaims: BigInt!
     totalProceeds: BigInt!
+    publicClaims: BigInt!
+    publicProceeds: BigInt!
 }
 
 type Referral @entity {

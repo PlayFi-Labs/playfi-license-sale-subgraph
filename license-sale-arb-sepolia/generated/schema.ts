@@ -50,6 +50,19 @@ export class Tier extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get type(): string {
+    let value = this.get("type");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set type(value: string) {
+    this.set("type", Value.fromString(value));
+  }
+
   get number(): BigInt {
     let value = this.get("number");
     if (!value || value.kind == ValueKind.NULL) {
@@ -245,6 +258,32 @@ export class Stat extends Entity {
 
   set totalProceeds(value: BigInt) {
     this.set("totalProceeds", Value.fromBigInt(value));
+  }
+
+  get publicClaims(): BigInt {
+    let value = this.get("publicClaims");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set publicClaims(value: BigInt) {
+    this.set("publicClaims", Value.fromBigInt(value));
+  }
+
+  get publicProceeds(): BigInt {
+    let value = this.get("publicProceeds");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set publicProceeds(value: BigInt) {
+    this.set("publicProceeds", Value.fromBigInt(value));
   }
 }
 

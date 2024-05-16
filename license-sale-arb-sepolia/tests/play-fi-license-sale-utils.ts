@@ -5,9 +5,9 @@ import {
     ContractInitialized, EarlyAccessLicensesClaimed,
     EarlyAccessSaleStatusSet, FriendsFamilyLicensesClaimed,
     FriendsFamilySaleStatusSet, PartnerLicensesClaimed,
-    PartnerSaleStatusSet, PublicLicensesClaimed,
-    PublicSaleStatusSet, ReferralUpdated, TeamLicensesClaimed,
-    TeamSaleStatusSet, TierSet,
+    PartnerSaleStatusSet, PartnerTierSet, PublicLicensesClaimed,
+    PublicSaleStatusSet, PublicWhitelistLicensesClaimed, ReferralUpdated, TeamLicensesClaimed,
+    TeamSaleStatusSet, TierSet, WhitelistTierSet,
 } from "../generated/PlayFiLicenseSale/PlayFiLicenseSale"
 import {handlePublicLicensesClaimed} from "../src/play-fi-license-sale";
 
@@ -82,7 +82,7 @@ export function createEarlyAccessSaleStatusSetEvent(status: boolean): EarlyAcces
     return earlyAccessSaleStatusSetEvent;
 }
 
-export function createPartnerSaleStatusSetEvent(status: boolean): PartnerSaleStatusSet {
+export function createPartnerSaleStatusSetEvent(status: boolean, partnerCode: string): PartnerSaleStatusSet {
     let partnerSaleStatusSetEvent = changetype<PartnerSaleStatusSet>(newMockEvent())
 
     partnerSaleStatusSetEvent.parameters = new Array()
@@ -91,6 +91,13 @@ export function createPartnerSaleStatusSetEvent(status: boolean): PartnerSaleSta
         new ethereum.EventParam(
             "status",
             ethereum.Value.fromBoolean(status)
+        )
+    )
+
+    partnerSaleStatusSetEvent.parameters.push(
+        new ethereum.EventParam(
+            "partnerCode",
+            ethereum.Value.fromString(partnerCode)
         )
     )
 
@@ -221,6 +228,49 @@ export function createPublicLicensesClaimedEvent(account: Address, amount: BigIn
     return publicLicensesClaimedEvent;
 }
 
+export function createPublicWhitelistLicensesClaimedEvent(account: Address, amount: BigInt, tier: BigInt, paid: BigInt, referral: string): PublicWhitelistLicensesClaimed {
+    let publicWhitelistLicensesClaimedEvent = changetype<PublicWhitelistLicensesClaimed>(newMockEvent())
+
+    publicWhitelistLicensesClaimedEvent.parameters = new Array()
+
+    publicWhitelistLicensesClaimedEvent.parameters.push(
+        new ethereum.EventParam(
+            "account",
+            ethereum.Value.fromAddress(account)
+        )
+    )
+
+    publicWhitelistLicensesClaimedEvent.parameters.push(
+        new ethereum.EventParam(
+            "amount",
+            ethereum.Value.fromUnsignedBigInt(amount)
+        )
+    )
+
+    publicWhitelistLicensesClaimedEvent.parameters.push(
+        new ethereum.EventParam(
+            "tier",
+            ethereum.Value.fromUnsignedBigInt(tier)
+        )
+    )
+
+    publicWhitelistLicensesClaimedEvent.parameters.push(
+        new ethereum.EventParam(
+            "paid",
+            ethereum.Value.fromUnsignedBigInt(paid)
+        )
+    )
+
+    publicWhitelistLicensesClaimedEvent.parameters.push(
+        new ethereum.EventParam(
+            "referral",
+            ethereum.Value.fromString(referral)
+        )
+    )
+
+    return publicWhitelistLicensesClaimedEvent;
+}
+
 export function createTierSetEvent(tierId: BigInt, price: BigInt, individualCap: BigInt, totalClaimed: BigInt, totalCap: BigInt): TierSet {
     let tierSetEvent = changetype<TierSet>(newMockEvent())
 
@@ -264,7 +314,100 @@ export function createTierSetEvent(tierId: BigInt, price: BigInt, individualCap:
     return tierSetEvent;
 }
 
-export function createPartnerLicensesClaimedEvent(account: Address, paid: BigInt, amount: BigInt): PartnerLicensesClaimed {
+export function createWhitelistTierSetEvent(tierId: BigInt, price: BigInt, individualCap: BigInt, totalClaimed: BigInt, totalCap: BigInt): WhitelistTierSet {
+    let tierSetEvent = changetype<WhitelistTierSet>(newMockEvent())
+
+    tierSetEvent.parameters = new Array()
+
+    tierSetEvent.parameters.push(
+        new ethereum.EventParam(
+            "tierId",
+            ethereum.Value.fromUnsignedBigInt(tierId)
+        )
+    )
+
+    tierSetEvent.parameters.push(
+        new ethereum.EventParam(
+            "price",
+            ethereum.Value.fromUnsignedBigInt(price)
+        )
+    )
+
+    tierSetEvent.parameters.push(
+        new ethereum.EventParam(
+            "individualCap",
+            ethereum.Value.fromUnsignedBigInt(individualCap)
+        )
+    )
+
+    tierSetEvent.parameters.push(
+        new ethereum.EventParam(
+            "totalClaimed",
+            ethereum.Value.fromUnsignedBigInt(totalClaimed)
+        )
+    )
+
+    tierSetEvent.parameters.push(
+        new ethereum.EventParam(
+            "totalCap",
+            ethereum.Value.fromUnsignedBigInt(totalCap)
+        )
+    )
+
+    return tierSetEvent;
+}
+
+export function createPartnerTierSetEvent(partnerCode: string, tierId: BigInt, price: BigInt, individualCap: BigInt, totalClaimed: BigInt, totalCap: BigInt): PartnerTierSet {
+    let tierSetEvent = changetype<PartnerTierSet>(newMockEvent())
+
+    tierSetEvent.parameters = new Array()
+
+    tierSetEvent.parameters.push(
+        new ethereum.EventParam(
+            "partnerCode",
+            ethereum.Value.fromString(partnerCode)
+        )
+    )
+
+    tierSetEvent.parameters.push(
+        new ethereum.EventParam(
+            "tierId",
+            ethereum.Value.fromUnsignedBigInt(tierId)
+        )
+    )
+
+    tierSetEvent.parameters.push(
+        new ethereum.EventParam(
+            "price",
+            ethereum.Value.fromUnsignedBigInt(price)
+        )
+    )
+
+    tierSetEvent.parameters.push(
+        new ethereum.EventParam(
+            "individualCap",
+            ethereum.Value.fromUnsignedBigInt(individualCap)
+        )
+    )
+
+    tierSetEvent.parameters.push(
+        new ethereum.EventParam(
+            "totalClaimed",
+            ethereum.Value.fromUnsignedBigInt(totalClaimed)
+        )
+    )
+
+    tierSetEvent.parameters.push(
+        new ethereum.EventParam(
+            "totalCap",
+            ethereum.Value.fromUnsignedBigInt(totalCap)
+        )
+    )
+
+    return tierSetEvent;
+}
+
+export function createPartnerLicensesClaimedEvent(account: Address, amount: BigInt, tier: BigInt, paid: BigInt, partnerCode: string, referral: string): PartnerLicensesClaimed {
     let partnerLicensesClaimedEvent = changetype<PartnerLicensesClaimed>(newMockEvent())
 
     partnerLicensesClaimedEvent.parameters = new Array()
@@ -278,6 +421,20 @@ export function createPartnerLicensesClaimedEvent(account: Address, paid: BigInt
 
     partnerLicensesClaimedEvent.parameters.push(
         new ethereum.EventParam(
+            "amount",
+            ethereum.Value.fromUnsignedBigInt(amount)
+        )
+    )
+
+    partnerLicensesClaimedEvent.parameters.push(
+        new ethereum.EventParam(
+            "tier",
+            ethereum.Value.fromUnsignedBigInt(tier)
+        )
+    )
+
+    partnerLicensesClaimedEvent.parameters.push(
+        new ethereum.EventParam(
             "paid",
             ethereum.Value.fromUnsignedBigInt(paid)
         )
@@ -285,8 +442,15 @@ export function createPartnerLicensesClaimedEvent(account: Address, paid: BigInt
 
     partnerLicensesClaimedEvent.parameters.push(
         new ethereum.EventParam(
-            "amount",
-            ethereum.Value.fromUnsignedBigInt(amount)
+            "partnerCode",
+            ethereum.Value.fromString(partnerCode)
+        )
+    )
+
+    partnerLicensesClaimedEvent.parameters.push(
+        new ethereum.EventParam(
+            "referral",
+            ethereum.Value.fromString(referral)
         )
     )
 

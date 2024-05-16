@@ -3,9 +3,9 @@ import {
   ContractInitialized, EarlyAccessLicensesClaimed,
   EarlyAccessSaleStatusSet, FriendsFamilyLicensesClaimed,
   FriendsFamilySaleStatusSet, PartnerLicensesClaimed,
-  PartnerSaleStatusSet, PublicLicensesClaimed,
-  PublicSaleStatusSet, ReferralUpdated, TeamLicensesClaimed,
-  TeamSaleStatusSet, TierSet
+  PartnerSaleStatusSet, PartnerTierSet, PublicLicensesClaimed,
+  PublicSaleStatusSet, PublicWhitelistLicensesClaimed, ReferralUpdated, TeamLicensesClaimed,
+  TeamSaleStatusSet, TierSet, WhitelistTierSet
 } from "../generated/PlayFiLicenseSale/PlayFiLicenseSale"
 import {Account, Claim, Phase, Referral, Stat, Tier} from "../generated/schema"
 import {Address, BigInt, Bytes, ByteArray, log} from "@graphprotocol/graph-ts";
@@ -15,66 +15,66 @@ export function handleContractInitialized(event: ContractInitialized): void {
   let stat = new Stat(BigInt.zero().toString());
   stat.totalClaims = BigInt.zero();
   stat.totalProceeds = BigInt.zero();
+  stat.publicClaims = BigInt.zero();
+  stat.publicProceeds = BigInt.zero();
   stat.save()
 
   //Set team phase paused
-  let teamPhase = new Phase(BigInt.zero().toString());
+  let teamPhase = new Phase('team');
   teamPhase.name = 'team';
   teamPhase.active = false;
   teamPhase.save();
 
   //Set friends and family phase paused
-  let friendsFamilyPhase = new Phase(BigInt.fromU32(1).toString());
+  let friendsFamilyPhase = new Phase('friends_family');
   friendsFamilyPhase.name = 'friends_family';
 
   friendsFamilyPhase.active = false;
   friendsFamilyPhase.save();
 
   //Set early access phase paused
-  let earlyAccessPhase = new Phase(BigInt.fromU32(2).toString());
+  let earlyAccessPhase = new Phase('early_access');
   earlyAccessPhase.name = 'early_access';
   earlyAccessPhase.active = false;
   earlyAccessPhase.save();
 
-  //Set partner phase paused
-  let partnerPhase = new Phase(BigInt.fromU32(3).toString());
-  partnerPhase.name = 'partner';
-  partnerPhase.active = false;
-  partnerPhase.save();
-
   //Set public phase paused
-  let publicPhase = new Phase(BigInt.fromU32(4).toString());
+  let publicPhase = new Phase('public');
   publicPhase.name = 'public';
   publicPhase.active = false;
   publicPhase.save();
 }
 
 export function handleTeamSaleStatusSet(event: TeamSaleStatusSet): void {
-  let teamPhase = Phase.load(BigInt.zero().toString());
+  let teamPhase = Phase.load('team');
   teamPhase!.active = event.params.status;
   teamPhase!.save();
 }
 
 export function handleFriendsFamilySaleStatusSet(event: FriendsFamilySaleStatusSet): void {
-  let friendsFamilyPhase = Phase.load(BigInt.fromU32(1).toString());
+  let friendsFamilyPhase = Phase.load('friends_family');
   friendsFamilyPhase!.active = event.params.status;
   friendsFamilyPhase!.save();
 }
 
 export function handleEarlyAccessSaleStatusSet(event: EarlyAccessSaleStatusSet): void {
-  let earlyAccessPhase = Phase.load(BigInt.fromU32(2).toString());
+  let earlyAccessPhase = Phase.load('early_access');
   earlyAccessPhase!.active = event.params.status;
   earlyAccessPhase!.save();
 }
 
 export function handlePartnerSaleStatusSet(event: PartnerSaleStatusSet): void {
-  let partnerPhase = Phase.load(BigInt.fromU32(3).toString());
-  partnerPhase!.active = event.params.status;
-  partnerPhase!.save();
+  let partnerPhase = Phase.load('partner_'+event.params.partnerCode);
+  if(!partnerPhase) {
+    partnerPhase = new Phase('partner_'+event.params.partnerCode);
+    partnerPhase.name = 'partner_'+event.params.partnerCode;
+  }
+  partnerPhase.active = event.params.status;
+  partnerPhase.save();
 }
 
 export function handlePublicSaleStatusSet(event: PublicSaleStatusSet): void {
-  let publicPhase = Phase.load(BigInt.fromU32(4).toString());
+  let publicPhase = Phase.load('public');
   publicPhase!.active = event.params.status;
   publicPhase!.save();
 }
@@ -95,9 +95,38 @@ export function handleReferralUpdated(event: ReferralUpdated): void {
 }
 
 export function handleTierSet(event: TierSet): void {
-  let tier = Tier.load(event.params.tierId.toString());
+  let tier = Tier.load('public_'+event.params.tierId.toString());
   if(!tier) {
-    tier = new Tier(event.params.tierId.toString());
+    tier = new Tier('public_'+event.params.tierId.toString());
+    tier.type = 'public';
+    tier.number = event.params.tierId;
+    tier.claimed = BigInt.zero();
+  }
+  tier.totalCap = event.params.totalCap
+  tier.individualCap = event.params.individualCap;
+  tier.price = event.params.price;
+  tier.save();
+}
+
+export function handleWhitelistTierSet(event: WhitelistTierSet): void {
+  let tier = Tier.load('whitelist_'+event.params.tierId.toString());
+  if(!tier) {
+    tier = new Tier('whitelist_'+event.params.tierId.toString());
+    tier.type = 'whitelist';
+    tier.number = event.params.tierId;
+    tier.claimed = BigInt.zero();
+  }
+  tier.totalCap = event.params.totalCap
+  tier.individualCap = event.params.individualCap;
+  tier.price = event.params.price;
+  tier.save();
+}
+
+export function handlePartnerTierSet(event: PartnerTierSet): void {
+  let tier = Tier.load('partner_'+event.params.partnerCode+'_'+event.params.tierId.toString());
+  if(!tier) {
+    tier = new Tier('partner_'+event.params.partnerCode+'_'+event.params.tierId.toString());
+    tier.type = 'partner_'+event.params.partnerCode;
     tier.number = event.params.tierId;
     tier.claimed = BigInt.zero();
   }
@@ -127,21 +156,55 @@ export function handlePublicLicensesClaimed(event: PublicLicensesClaimed): void 
   account.save();
 
   let claim = new Claim(event.transaction.hash.toHex() + "-" + event.logIndex.toString());
-  claim.tier = event.params.tier.toString();
+  claim.tier = 'public_'+event.params.tier.toString();
   claim.account = account.id;
   claim.amount = event.params.amount;
   claim.paid = event.params.paid;
-  claim.phase = BigInt.fromString("4").toString();
+  claim.phase = 'public';
   claim.referral = event.params.referral;
   claim.save();
 
-  let tier = Tier.load(event.params.tier.toString());
+  let tier = Tier.load('public_'+event.params.tier.toString());
   tier!.claimed = tier!.claimed.plus(claim.amount);
   tier!.save();
 
   let stat = Stat.load(BigInt.zero().toString());
   stat!.totalClaims = stat!.totalClaims.plus(claim.amount);
   stat!.totalProceeds = stat!.totalProceeds.plus(claim.paid);
+  stat!.publicClaims = stat!.publicClaims.plus(claim.amount);
+  stat!.publicProceeds = stat!.publicProceeds.plus(claim.paid);
+  stat!.save();
+}
+
+export function handlePublicWhitelistLicensesClaimed(event: PublicWhitelistLicensesClaimed): void {
+  let account = Account.load(event.params.account.toHexString());
+  if(!account) {
+    account = new Account(event.params.account.toHexString());
+    account.totalLicenses = BigInt.zero();
+    account.totalPaid = BigInt.zero();
+  }
+  account.totalLicenses = account.totalLicenses.plus(event.params.amount);
+  account.totalPaid = account.totalPaid.plus(event.params.paid);
+  account.save();
+
+  let claim = new Claim(event.transaction.hash.toHex() + "-" + event.logIndex.toString());
+  claim.tier = 'whitelist_'+event.params.tier.toString();
+  claim.account = account.id;
+  claim.amount = event.params.amount;
+  claim.paid = event.params.paid;
+  claim.phase = 'public';
+  claim.referral = event.params.referral;
+  claim.save();
+
+  let tier = Tier.load('whitelist_'+event.params.tier.toString());
+  tier!.claimed = tier!.claimed.plus(claim.amount);
+  tier!.save();
+
+  let stat = Stat.load(BigInt.zero().toString());
+  stat!.totalClaims = stat!.totalClaims.plus(claim.amount);
+  stat!.totalProceeds = stat!.totalProceeds.plus(claim.paid);
+  stat!.publicClaims = stat!.publicClaims.plus(claim.amount);
+  stat!.publicProceeds = stat!.publicProceeds.plus(claim.paid);
   stat!.save();
 }
 
@@ -157,11 +220,17 @@ export function handlePartnerLicensesClaimed(event: PartnerLicensesClaimed): voi
   account.save();
 
   let claim = new Claim(event.transaction.hash.toHex() + "-" + event.logIndex.toString());
+  claim.tier = 'partner_'+event.params.partnerCode+'_'+event.params.tier.toString();
   claim.account = account.id;
   claim.amount = event.params.amount;
   claim.paid = event.params.paid;
-  claim.phase = BigInt.fromString("3").toString();
+  claim.phase = 'partner_'+event.params.partnerCode;
+  claim.referral = event.params.referral;
   claim.save();
+
+  let tier = Tier.load('partner_'+event.params.partnerCode+'_'+event.params.tier.toString());
+  tier!.claimed = tier!.claimed.plus(claim.amount);
+  tier!.save();
 
   let stat = Stat.load(BigInt.zero().toString());
   stat!.totalClaims = stat!.totalClaims.plus(claim.amount);
@@ -184,7 +253,7 @@ export function handleEarlyAccessLicensesClaimed(event: EarlyAccessLicensesClaim
   claim.account = account.id;
   claim.amount = event.params.amount;
   claim.paid = event.params.paid;
-  claim.phase = BigInt.fromString("2").toString()
+  claim.phase = 'early_access';
   claim.save();
 
   let stat = Stat.load(BigInt.zero().toString());
@@ -208,7 +277,7 @@ export function handleFriendsFamilyLicensesClaimed(event: FriendsFamilyLicensesC
   claim.account = account.id;
   claim.amount = event.params.amount;
   claim.paid = event.params.paid;
-  claim.phase = BigInt.fromString("1").toString();
+  claim.phase = 'friends_family';
   claim.save();
 
   let stat = Stat.load(BigInt.zero().toString());
@@ -231,7 +300,7 @@ export function handleTeamLicensesClaimed(event: TeamLicensesClaimed): void {
   claim.account = account.id;
   claim.amount = event.params.amount;
   claim.paid = BigInt.zero();
-  claim.phase = BigInt.zero().toString()
+  claim.phase = 'team';
   claim.save();
 
   let stat = Stat.load(BigInt.zero().toString());

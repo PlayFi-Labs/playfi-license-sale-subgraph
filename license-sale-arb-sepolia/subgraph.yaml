@@ -8,9 +8,9 @@ dataSources:
     name: PlayFiLicenseSale
     network: arbitrum-sepolia
     source:
-      address: "0xC1a9e2c20c78D65b57037b67A627Aa7Bff4A7582"
+      address: "0x3922071c459c5b5d2c1F2b6D9aB08633C056DEE2"
       abi: PlayFiLicenseSale
-      startBlock: 41503429
+      startBlock: 44050878
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -34,7 +34,7 @@ dataSources:
           handler: handleFriendsFamilySaleStatusSet
         - event: EarlyAccessSaleStatusSet(bool)
           handler: handleEarlyAccessSaleStatusSet
-        - event: PartnerSaleStatusSet(bool)
+        - event: PartnerSaleStatusSet(bool,string)
           handler: handlePartnerSaleStatusSet
         - event: PublicSaleStatusSet(bool)
           handler: handlePublicSaleStatusSet
@@ -42,11 +42,17 @@ dataSources:
           handler: handleReferralUpdated
         - event: TierSet(indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleTierSet
+        - event: WhitelistTierSet(indexed uint256,uint256,uint256,uint256,uint256)
+          handler: handleWhitelistTierSet
+        - event: PartnerTierSet(string,indexed uint256,uint256,uint256,uint256,uint256)
+          handler: handlePartnerTierSet
         - event: CommissionPaid(string,indexed address,uint256)
           handler: handleCommissionPaid
         - event: PublicLicensesClaimed(indexed address,uint256,indexed uint256,uint256,string)
           handler: handlePublicLicensesClaimed
-        - event: PartnerLicensesClaimed(indexed address,uint256,uint256)
+        - event: PublicWhitelistLicensesClaimed(indexed address,uint256,indexed uint256,uint256,string)
+          handler: handlePublicWhitelistLicensesClaimed
+        - event: PartnerLicensesClaimed(indexed address,uint256,indexed uint256,uint256,string,string)
           handler: handlePartnerLicensesClaimed
         - event: EarlyAccessLicensesClaimed(indexed address,uint256,uint256)
           handler: handleEarlyAccessLicensesClaimed
