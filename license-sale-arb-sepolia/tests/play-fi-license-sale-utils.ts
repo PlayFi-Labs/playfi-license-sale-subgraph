@@ -119,7 +119,7 @@ export function createPublicSaleStatusSetEvent(status: boolean): PublicSaleStatu
     return publicSaleStatusSetEvent;
 }
 
-export function createReferralUpdatedEvent(code: string, receiver: Address, active: boolean): ReferralUpdated {
+export function createReferralUpdatedEvent(code: string, receiver: Address): ReferralUpdated {
     let referralUpdatedEvent = changetype<ReferralUpdated>(newMockEvent())
 
     referralUpdatedEvent.parameters = new Array()
@@ -137,14 +137,6 @@ export function createReferralUpdatedEvent(code: string, receiver: Address, acti
             ethereum.Value.fromAddress(receiver)
         )
     )
-
-    referralUpdatedEvent.parameters.push(
-        new ethereum.EventParam(
-            "active",
-            ethereum.Value.fromBoolean(active)
-        )
-    )
-
     return referralUpdatedEvent;
 }
 

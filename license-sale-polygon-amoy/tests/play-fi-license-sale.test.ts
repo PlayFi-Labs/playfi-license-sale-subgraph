@@ -439,47 +439,40 @@ describe("ReferralUpdated sets the correct referral entity", () => {
 
   test("Referral is initialized when it does not exist", () => {
 
-    let newReferralUpdatedEvent = createReferralUpdatedEvent("REFERRAL", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), true)
+    let newReferralUpdatedEvent = createReferralUpdatedEvent("REFERRAL", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"))
     handleReferralUpdated(newReferralUpdatedEvent)
 
     assert.fieldEquals(
         "Referral",
-        "REFERRAL",
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase(),
         "activeSince",
         newReferralUpdatedEvent.block.timestamp.toString()
     )
 
     assert.fieldEquals(
         "Referral",
-        "REFERRAL",
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase(),
         "totalCommission",
         "0"
     )
 
     assert.fieldEquals(
         "Referral",
-        "REFERRAL",
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase(),
         "totalUsed",
         "0"
     )
 
     assert.fieldEquals(
         "Referral",
-        "REFERRAL",
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase(),
         "code",
         "REFERRAL"
     )
 
     assert.fieldEquals(
         "Referral",
-        "REFERRAL",
-        "active",
-        "true"
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "REFERRAL",
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase(),
         "recipient",
         "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase()
     )
@@ -488,149 +481,44 @@ describe("ReferralUpdated sets the correct referral entity", () => {
 
   test("Referral is updated when it does exist", () => {
 
+    let newReferralUpdatedEvent1 = createReferralUpdatedEvent("REFERRAL2", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"))
+    handleReferralUpdated(newReferralUpdatedEvent1)
+
     let newCommissionPaidEvent = createCommissionPaidEvent("REFERRAL", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100))
     handleCommissionPaid(newCommissionPaidEvent)
 
-    let newReferralUpdatedEvent = createReferralUpdatedEvent("REFERRAL", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), true)
-    handleReferralUpdated(newReferralUpdatedEvent)
+    let newReferralUpdatedEvent2 = createReferralUpdatedEvent("REFERRAL2", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"))
+    handleReferralUpdated(newReferralUpdatedEvent2)
 
     assert.fieldEquals(
         "Referral",
-        "REFERRAL",
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase(),
         "totalCommission",
         "100"
     )
 
     assert.fieldEquals(
         "Referral",
-        "REFERRAL",
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase(),
         "totalUsed",
         "1"
     )
 
     assert.fieldEquals(
         "Referral",
-        "REFERRAL",
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase(),
         "code",
-        "REFERRAL"
+        "REFERRAL2"
     )
 
     assert.fieldEquals(
         "Referral",
-        "REFERRAL",
-        "active",
-        "true"
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "REFERRAL",
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase(),
         "recipient",
         "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase()
     )
 
   })
-
-  test("standard referral is initialized when it does not exist", () => {
-
-    let newTierSetEvent = createTierSetEvent(BigInt.fromU32(4), BigInt.fromI32(1000), BigInt.fromI32(5), BigInt.fromI32(0), BigInt.fromI32(100))
-    handleTierSet(newTierSetEvent)
-
-    let newReferralUpdatedEvent = createReferralUpdatedEvent("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), true)
-    handleReferralUpdated(newReferralUpdatedEvent)
-
-    let newPublicLicensesClaimedEvent = createPublicLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(10), BigInt.fromU32(4), BigInt.fromI32(100), "")
-    handlePublicLicensesClaimed(newPublicLicensesClaimedEvent)
-
-    assert.fieldEquals(
-        "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "activeSince",
-        newPublicLicensesClaimedEvent.block.timestamp.toString()
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "totalCommission",
-        "0"
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "totalUsed",
-        "0"
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "code",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "active",
-        "true"
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "recipient",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase()
-    )
-
-  })
-
-  test("standard referral is updated when it does exist", () => {
-
-    let newCommissionPaidEvent = createCommissionPaidEvent("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100))
-    handleCommissionPaid(newCommissionPaidEvent)
-
-    let newReferralUpdatedEvent = createReferralUpdatedEvent("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), true)
-    handleReferralUpdated(newReferralUpdatedEvent)
-
-    assert.fieldEquals(
-        "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "totalCommission",
-        "100"
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "totalUsed",
-        "1"
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "code",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "active",
-        "true"
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "recipient",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase()
-    )
-
-  })
-
 })
 
 describe("TierSet sets the correct tier settings", () => {
@@ -975,43 +863,36 @@ describe("CommissionPaid does the correct commission updates", () => {
 
   test("Commission total and total used are correctly updated", () => {
 
-    let newReferralUpdatedEvent = createReferralUpdatedEvent("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), true)
+    let newReferralUpdatedEvent = createReferralUpdatedEvent("REFERRAL", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"))
     handleReferralUpdated(newReferralUpdatedEvent)
 
-    let newCommissionPaidEvent = createCommissionPaidEvent("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(1000))
+    let newCommissionPaidEvent = createCommissionPaidEvent("REFERRAL", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(1000))
     handleCommissionPaid(newCommissionPaidEvent)
 
     assert.fieldEquals(
         "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase(),
         "totalCommission",
         "1000"
     )
 
     assert.fieldEquals(
         "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase(),
         "totalUsed",
         "1"
     )
 
     assert.fieldEquals(
         "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase(),
         "code",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"
+        "REFERRAL"
     )
 
     assert.fieldEquals(
         "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "active",
-        "true"
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase(),
         "recipient",
         "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase()
     )
@@ -1056,7 +937,10 @@ describe("PublicLicensesClaimed does the correct updates upon public license cla
 
   test("Claims updated correctly", () => {
 
-    let newPublicLicensesClaimedEvent = createPublicLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100), BigInt.fromU32(1),BigInt.fromI32(1000),"")
+    let newReferralUpdatedEvent1 = createReferralUpdatedEvent("REFERRAL2", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"))
+    handleReferralUpdated(newReferralUpdatedEvent1)
+
+    let newPublicLicensesClaimedEvent = createPublicLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100), BigInt.fromU32(1),BigInt.fromI32(1000),"REFERRAL2")
     handlePublicLicensesClaimed(newPublicLicensesClaimedEvent)
 
     assert.fieldEquals(
@@ -1098,7 +982,7 @@ describe("PublicLicensesClaimed does the correct updates upon public license cla
         "Claim",
         newPublicLicensesClaimedEvent.transaction.hash.toHex() + "-" + newPublicLicensesClaimedEvent.transactionLogIndex.toString(),
         "referral",
-        "null"
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase()
     )
 
   })
@@ -1190,7 +1074,10 @@ describe("PublicWhitelistLicensesClaimed does the correct updates upon public li
 
   test("Claims updated correctly", () => {
 
-    let newPublicWhitelistLicensesClaimedEvent = createPublicWhitelistLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100), BigInt.fromU32(1),BigInt.fromI32(1000),"")
+    let newReferralUpdatedEvent1 = createReferralUpdatedEvent("REFERRAL2", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"))
+    handleReferralUpdated(newReferralUpdatedEvent1)
+
+    let newPublicWhitelistLicensesClaimedEvent = createPublicWhitelistLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100), BigInt.fromU32(1),BigInt.fromI32(1000),"REFERRAL2")
     handlePublicWhitelistLicensesClaimed(newPublicWhitelistLicensesClaimedEvent)
 
     assert.fieldEquals(
@@ -1232,7 +1119,7 @@ describe("PublicWhitelistLicensesClaimed does the correct updates upon public li
         "Claim",
         newPublicWhitelistLicensesClaimedEvent.transaction.hash.toHex() + "-" + newPublicWhitelistLicensesClaimedEvent.transactionLogIndex.toString(),
         "referral",
-        "null"
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase()
     )
 
   })
@@ -1325,7 +1212,10 @@ describe("PartnerLicensesClaimed does the correct updates upon partner license c
 
   test("Claims updated correctly", () => {
 
-    let newPartnerLicensesClaimedEvent = createPartnerLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100), BigInt.fromI32(1), BigInt.fromI32(1000), "POLYGON", "REFERRAL")
+    let newReferralUpdatedEvent1 = createReferralUpdatedEvent("REFERRAL2", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"))
+    handleReferralUpdated(newReferralUpdatedEvent1)
+
+    let newPartnerLicensesClaimedEvent = createPartnerLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100), BigInt.fromI32(1), BigInt.fromI32(1000), "POLYGON", "REFERRAL2")
     handlePartnerLicensesClaimed(newPartnerLicensesClaimedEvent)
 
 
@@ -1368,7 +1258,7 @@ describe("PartnerLicensesClaimed does the correct updates upon partner license c
         "Claim",
         newPartnerLicensesClaimedEvent.transaction.hash.toHex() + "-" + newPartnerLicensesClaimedEvent.transactionLogIndex.toString(),
         "referral",
-        "REFERRAL"
+        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7".toLowerCase()
     )
 
     assert.fieldEquals(
@@ -1741,5 +1631,4 @@ describe("TeamLicensesClaimed does the correct updates upon team license claims"
     )
 
   })
-
 })

@@ -8,9 +8,9 @@ dataSources:
     name: PlayFiLicenseSale
     network: polygon-amoy
     source:
-      address: "0xf7Cd1863845297c9618D2A9Ff7FE2B6C5B423767"
+      address: "0x5D04F0c5578259CcE16FAC03e041a9c600cb4C68"
       abi: PlayFiLicenseSale
-      startBlock: 7395991
+      startBlock: 8548071
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -20,6 +20,7 @@ dataSources:
         - Phase
         - Stats
         - Referral
+        - ReferralOwner
         - Account
         - Claim
       abis:
@@ -38,7 +39,7 @@ dataSources:
           handler: handlePartnerSaleStatusSet
         - event: PublicSaleStatusSet(bool)
           handler: handlePublicSaleStatusSet
-        - event: ReferralUpdated(string,indexed address,bool)
+        - event: ReferralUpdated(string,indexed address)
           handler: handleReferralUpdated
         - event: TierSet(indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleTierSet

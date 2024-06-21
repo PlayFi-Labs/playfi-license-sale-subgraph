@@ -8,9 +8,9 @@ dataSources:
     name: PlayFiLicenseSale
     network: zksync-era-sepolia
     source:
-      address: "0x824bD54Bd056fF8C535dC505D41F72103A575482"
+      address: "0x76e84aECeF59A95afa610Db2d8a0Db92B0Ca7746"
       abi: PlayFiLicenseSale
-      startBlock: 2497653
+      startBlock: 2997209
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -20,6 +20,7 @@ dataSources:
         - Phase
         - Stats
         - Referral
+        - ReferralOwner
         - Account
         - Claim
       abis:
@@ -38,7 +39,7 @@ dataSources:
           handler: handlePartnerSaleStatusSet
         - event: PublicSaleStatusSet(bool)
           handler: handlePublicSaleStatusSet
-        - event: ReferralUpdated(string,indexed address,bool)
+        - event: ReferralUpdated(string,indexed address)
           handler: handleReferralUpdated
         - event: TierSet(indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleTierSet

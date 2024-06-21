@@ -352,19 +352,6 @@ export class Referral extends Entity {
     this.set("recipient", Value.fromBytes(value));
   }
 
-  get active(): boolean {
-    let value = this.get("active");
-    if (!value || value.kind == ValueKind.NULL) {
-      return false;
-    } else {
-      return value.toBoolean();
-    }
-  }
-
-  set active(value: boolean) {
-    this.set("active", Value.fromBoolean(value));
-  }
-
   get totalCommission(): BigInt {
     let value = this.get("totalCommission");
     if (!value || value.kind == ValueKind.NULL) {
@@ -402,6 +389,61 @@ export class Referral extends Entity {
 
   set activeSince(value: BigInt) {
     this.set("activeSince", Value.fromBigInt(value));
+  }
+}
+
+export class ReferralOwner extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ReferralOwner entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ReferralOwner must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("ReferralOwner", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): ReferralOwner | null {
+    return changetype<ReferralOwner | null>(
+      store.get_in_block("ReferralOwner", id),
+    );
+  }
+
+  static load(id: string): ReferralOwner | null {
+    return changetype<ReferralOwner | null>(store.get("ReferralOwner", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get recipient(): Bytes {
+    let value = this.get("recipient");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set recipient(value: Bytes) {
+    this.set("recipient", Value.fromBytes(value));
   }
 }
 

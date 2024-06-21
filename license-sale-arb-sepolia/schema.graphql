@@ -26,10 +26,14 @@ type Referral @entity {
     id: ID!
     code: String!
     recipient: Bytes!
-    active: Boolean!
     totalCommission: BigInt!
     totalUsed: BigInt!
     activeSince: BigInt!
+}
+
+type ReferralOwner @entity {
+    id: ID!
+    recipient: Bytes!
 }
 
 type Account @entity {

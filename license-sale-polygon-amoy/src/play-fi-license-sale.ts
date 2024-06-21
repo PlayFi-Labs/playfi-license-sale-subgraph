@@ -7,8 +7,8 @@ import {
   PublicSaleStatusSet, PublicWhitelistLicensesClaimed, ReferralUpdated, TeamLicensesClaimed,
   TeamSaleStatusSet, TierSet, WhitelistTierSet
 } from "../generated/PlayFiLicenseSale/PlayFiLicenseSale"
-import {Account, Claim, Phase, Referral, Stat, Tier} from "../generated/schema"
-import {Address, BigInt, Bytes, ByteArray, log} from "@graphprotocol/graph-ts";
+import {Account, Claim, Phase, Referral, ReferralOwner, Stat, Tier} from "../generated/schema"
+import {Address, BigInt, Bytes, ByteArray, log, store} from "@graphprotocol/graph-ts";
 
 export function handleContractInitialized(event: ContractInitialized): void {
   //Initialize stats
@@ -80,15 +80,23 @@ export function handlePublicSaleStatusSet(event: PublicSaleStatusSet): void {
 }
 
 export function handleReferralUpdated(event: ReferralUpdated): void {
-  let referral = Referral.load(event.params.code);
+  let referral = Referral.load(event.params.receiver.toHexString());
   if(!referral) {
-    referral = new Referral(event.params.code);
+    referral = new Referral(event.params.receiver.toHexString());
     referral.activeSince = event.block.timestamp;
     referral.totalCommission = BigInt.zero();
     referral.totalUsed = BigInt.zero();
+  } else {
+    if(referral.code != event.params.code) {
+      if(store.get("ReferralOwner",referral.code)) {
+        store.remove("ReferralOwner",referral.code);
+      }
+    }
   }
+  let referralOwner = new ReferralOwner(event.params.code);
+  referralOwner.recipient = event.params.receiver;
+  referralOwner.save();
   referral.code = event.params.code;
-  referral.active = event.params.active;
   referral.recipient = event.params.receiver;
   referral.save();
 }
@@ -136,11 +144,12 @@ export function handlePartnerTierSet(event: PartnerTierSet): void {
 }
 
 export function handleCommissionPaid(event: CommissionPaid): void {
-  (event.params.code);
-  let referral = Referral.load(event.params.code);
-  referral!.totalUsed = referral!.totalUsed.plus(BigInt.fromI32(1));
-  referral!.totalCommission = referral!.totalCommission.plus(event.params.amount);
-  referral!.save();
+  let referral = Referral.load(event.params.receiver.toHexString());
+  if(referral) {
+    referral.totalUsed = referral.totalUsed.plus(BigInt.fromI32(1));
+    referral.totalCommission = referral.totalCommission.plus(event.params.amount);
+    referral.save();
+  }
 }
 
 export function handlePublicLicensesClaimed(event: PublicLicensesClaimed): void {
@@ -160,7 +169,10 @@ export function handlePublicLicensesClaimed(event: PublicLicensesClaimed): void 
   claim.amount = event.params.amount;
   claim.paid = event.params.paid;
   claim.phase = 'public';
-  claim.referral = event.params.referral;
+  let referralOwner = ReferralOwner.load(event.params.referral);
+  if(referralOwner) {
+    claim.referral = referralOwner.recipient.toHexString();
+  }
   claim.save();
 
   let tier = Tier.load('public_'+event.params.tier.toString());
@@ -192,7 +204,10 @@ export function handlePublicWhitelistLicensesClaimed(event: PublicWhitelistLicen
   claim.amount = event.params.amount;
   claim.paid = event.params.paid;
   claim.phase = 'public';
-  claim.referral = event.params.referral;
+  let referralOwner = ReferralOwner.load(event.params.referral);
+  if(referralOwner) {
+    claim.referral = referralOwner.recipient.toHexString();
+  }
   claim.save();
 
   let tier = Tier.load('whitelist_'+event.params.tier.toString());
@@ -224,7 +239,10 @@ export function handlePartnerLicensesClaimed(event: PartnerLicensesClaimed): voi
   claim.amount = event.params.amount;
   claim.paid = event.params.paid;
   claim.phase = 'partner_'+event.params.partnerCode;
-  claim.referral = event.params.referral;
+  let referralOwner = ReferralOwner.load(event.params.referral);
+  if(referralOwner) {
+    claim.referral = referralOwner.recipient.toHexString();
+  }
   claim.save();
 
   let tier = Tier.load('partner_'+event.params.partnerCode+'_'+event.params.tier.toString());

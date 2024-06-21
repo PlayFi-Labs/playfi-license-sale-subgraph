@@ -230,6 +230,28 @@ export class PartnerLicensesClaimed__Params {
   }
 }
 
+export class PartnerReceiverAddressSet extends ethereum.Event {
+  get params(): PartnerReceiverAddressSet__Params {
+    return new PartnerReceiverAddressSet__Params(this);
+  }
+}
+
+export class PartnerReceiverAddressSet__Params {
+  _event: PartnerReceiverAddressSet;
+
+  constructor(event: PartnerReceiverAddressSet) {
+    this._event = event;
+  }
+
+  get partnerCode(): string {
+    return this._event.parameters[0].value.toString();
+  }
+
+  get receiver(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
 export class PartnerSaleStatusSet extends ethereum.Event {
   get params(): PartnerSaleStatusSet__Params {
     return new PartnerSaleStatusSet__Params(this);
@@ -435,10 +457,6 @@ export class ReferralUpdated__Params {
 
   get receiver(): Address {
     return this._event.parameters[1].value.toAddress();
-  }
-
-  get active(): boolean {
-    return this._event.parameters[2].value.toBoolean();
   }
 }
 
@@ -665,16 +683,12 @@ export class PlayFiLicenseSale__getPartnerTierResultTierStruct extends ethereum.
 }
 
 export class PlayFiLicenseSale__getReferralResultReferralStruct extends ethereum.Tuple {
-  get active(): boolean {
-    return this[0].toBoolean();
-  }
-
   get totalClaims(): BigInt {
-    return this[1].toBigInt();
+    return this[0].toBigInt();
   }
 
   get receiver(): Address {
-    return this[2].toAddress();
+    return this[1].toAddress();
   }
 }
 
@@ -800,34 +814,27 @@ export class PlayFiLicenseSale__paymentDetailsForReferralResult {
 }
 
 export class PlayFiLicenseSale__referralsResult {
-  value0: boolean;
-  value1: BigInt;
-  value2: Address;
+  value0: BigInt;
+  value1: Address;
 
-  constructor(value0: boolean, value1: BigInt, value2: Address) {
+  constructor(value0: BigInt, value1: Address) {
     this.value0 = value0;
     this.value1 = value1;
-    this.value2 = value2;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromBoolean(this.value0));
-    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    map.set("value2", ethereum.Value.fromAddress(this.value2));
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromAddress(this.value1));
     return map;
   }
 
-  getActive(): boolean {
+  getTotalClaims(): BigInt {
     return this.value0;
   }
 
-  getTotalClaims(): BigInt {
-    return this.value1;
-  }
-
   getReceiver(): Address {
-    return this.value2;
+    return this.value1;
   }
 }
 
@@ -1235,7 +1242,7 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
   getReferral(id: string): PlayFiLicenseSale__getReferralResultReferralStruct {
     let result = super.call(
       "getReferral",
-      "getReferral(string):((bool,uint256,address))",
+      "getReferral(string):((uint256,address))",
       [ethereum.Value.fromString(id)],
     );
 
@@ -1249,7 +1256,7 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
   ): ethereum.CallResult<PlayFiLicenseSale__getReferralResultReferralStruct> {
     let result = super.tryCall(
       "getReferral",
-      "getReferral(string):((bool,uint256,address))",
+      "getReferral(string):((uint256,address))",
       [ethereum.Value.fromString(id)],
     );
     if (result.reverted) {
@@ -1409,6 +1416,29 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  partnerReceiverAddress(param0: string): Address {
+    let result = super.call(
+      "partnerReceiverAddress",
+      "partnerReceiverAddress(string):(address)",
+      [ethereum.Value.fromString(param0)],
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_partnerReceiverAddress(param0: string): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "partnerReceiverAddress",
+      "partnerReceiverAddress(string):(address)",
+      [ethereum.Value.fromString(param0)],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   partnerSaleActive(param0: string): boolean {
@@ -1685,17 +1715,39 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  receiverToReferralCode(param0: Address): string {
+    let result = super.call(
+      "receiverToReferralCode",
+      "receiverToReferralCode(address):(string)",
+      [ethereum.Value.fromAddress(param0)],
+    );
+
+    return result[0].toString();
+  }
+
+  try_receiverToReferralCode(param0: Address): ethereum.CallResult<string> {
+    let result = super.tryCall(
+      "receiverToReferralCode",
+      "receiverToReferralCode(address):(string)",
+      [ethereum.Value.fromAddress(param0)],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
+  }
+
   referrals(param0: string): PlayFiLicenseSale__referralsResult {
     let result = super.call(
       "referrals",
-      "referrals(string):(bool,uint256,address)",
+      "referrals(string):(uint256,address)",
       [ethereum.Value.fromString(param0)],
     );
 
     return new PlayFiLicenseSale__referralsResult(
-      result[0].toBoolean(),
-      result[1].toBigInt(),
-      result[2].toAddress(),
+      result[0].toBigInt(),
+      result[1].toAddress(),
     );
   }
 
@@ -1704,7 +1756,7 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
   ): ethereum.CallResult<PlayFiLicenseSale__referralsResult> {
     let result = super.tryCall(
       "referrals",
-      "referrals(string):(bool,uint256,address)",
+      "referrals(string):(uint256,address)",
       [ethereum.Value.fromString(param0)],
     );
     if (result.reverted) {
@@ -1713,9 +1765,8 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(
       new PlayFiLicenseSale__referralsResult(
-        value[0].toBoolean(),
-        value[1].toBigInt(),
-        value[2].toAddress(),
+        value[0].toBigInt(),
+        value[1].toAddress(),
       ),
     );
   }
@@ -2420,6 +2471,40 @@ export class SetFriendsFamilySaleCall__Outputs {
   }
 }
 
+export class SetPartnerReceiverAddressCall extends ethereum.Call {
+  get inputs(): SetPartnerReceiverAddressCall__Inputs {
+    return new SetPartnerReceiverAddressCall__Inputs(this);
+  }
+
+  get outputs(): SetPartnerReceiverAddressCall__Outputs {
+    return new SetPartnerReceiverAddressCall__Outputs(this);
+  }
+}
+
+export class SetPartnerReceiverAddressCall__Inputs {
+  _call: SetPartnerReceiverAddressCall;
+
+  constructor(call: SetPartnerReceiverAddressCall) {
+    this._call = call;
+  }
+
+  get partnerCode(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
+  get receiver(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+}
+
+export class SetPartnerReceiverAddressCall__Outputs {
+  _call: SetPartnerReceiverAddressCall;
+
+  constructor(call: SetPartnerReceiverAddressCall) {
+    this._call = call;
+  }
+}
+
 export class SetPartnerSaleCall extends ethereum.Call {
   get inputs(): SetPartnerSaleCall__Inputs {
     return new SetPartnerSaleCall__Inputs(this);
@@ -2580,20 +2665,46 @@ export class SetReferralCall__Inputs {
   get code(): string {
     return this._call.inputValues[0].value.toString();
   }
-
-  get receiver(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get active(): boolean {
-    return this._call.inputValues[2].value.toBoolean();
-  }
 }
 
 export class SetReferralCall__Outputs {
   _call: SetReferralCall;
 
   constructor(call: SetReferralCall) {
+    this._call = call;
+  }
+}
+
+export class SetReferralForReceiverCall extends ethereum.Call {
+  get inputs(): SetReferralForReceiverCall__Inputs {
+    return new SetReferralForReceiverCall__Inputs(this);
+  }
+
+  get outputs(): SetReferralForReceiverCall__Outputs {
+    return new SetReferralForReceiverCall__Outputs(this);
+  }
+}
+
+export class SetReferralForReceiverCall__Inputs {
+  _call: SetReferralForReceiverCall;
+
+  constructor(call: SetReferralForReceiverCall) {
+    this._call = call;
+  }
+
+  get code(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
+  get receiver(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+}
+
+export class SetReferralForReceiverCall__Outputs {
+  _call: SetReferralForReceiverCall;
+
+  constructor(call: SetReferralForReceiverCall) {
     this._call = call;
   }
 }
