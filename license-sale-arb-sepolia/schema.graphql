@@ -26,8 +26,7 @@ type Referral @entity {
     id: ID!
     code: String!
     recipient: Bytes!
-    commissionPercentage: BigInt!
-    discountPercentage: BigInt!
+    active: Boolean!
     totalCommission: BigInt!
     totalUsed: BigInt!
     activeSince: BigInt!

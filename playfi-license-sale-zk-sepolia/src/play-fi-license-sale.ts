@@ -88,8 +88,7 @@ export function handleReferralUpdated(event: ReferralUpdated): void {
     referral.totalUsed = BigInt.zero();
   }
   referral.code = event.params.code;
-  referral.commissionPercentage = event.params.commission;
-  referral.discountPercentage = event.params.discount;
+  referral.active = event.params.active;
   referral.recipient = event.params.receiver;
   referral.save();
 }

@@ -437,12 +437,8 @@ export class ReferralUpdated__Params {
     return this._event.parameters[1].value.toAddress();
   }
 
-  get commission(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-
-  get discount(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
+  get active(): boolean {
+    return this._event.parameters[2].value.toBoolean();
   }
 }
 
@@ -669,11 +665,11 @@ export class PlayFiLicenseSale__getPartnerTierResultTierStruct extends ethereum.
 }
 
 export class PlayFiLicenseSale__getReferralResultReferralStruct extends ethereum.Tuple {
-  get discountPercentage(): BigInt {
-    return this[0].toBigInt();
+  get active(): boolean {
+    return this[0].toBoolean();
   }
 
-  get commissionPercentage(): BigInt {
+  get totalClaims(): BigInt {
     return this[1].toBigInt();
   }
 
@@ -804,11 +800,11 @@ export class PlayFiLicenseSale__paymentDetailsForReferralResult {
 }
 
 export class PlayFiLicenseSale__referralsResult {
-  value0: BigInt;
+  value0: boolean;
   value1: BigInt;
   value2: Address;
 
-  constructor(value0: BigInt, value1: BigInt, value2: Address) {
+  constructor(value0: boolean, value1: BigInt, value2: Address) {
     this.value0 = value0;
     this.value1 = value1;
     this.value2 = value2;
@@ -816,17 +812,17 @@ export class PlayFiLicenseSale__referralsResult {
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value0", ethereum.Value.fromBoolean(this.value0));
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
     map.set("value2", ethereum.Value.fromAddress(this.value2));
     return map;
   }
 
-  getDiscountPercentage(): BigInt {
+  getActive(): boolean {
     return this.value0;
   }
 
-  getCommissionPercentage(): BigInt {
+  getTotalClaims(): BigInt {
     return this.value1;
   }
 
@@ -1239,7 +1235,7 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
   getReferral(id: string): PlayFiLicenseSale__getReferralResultReferralStruct {
     let result = super.call(
       "getReferral",
-      "getReferral(string):((uint256,uint256,address))",
+      "getReferral(string):((bool,uint256,address))",
       [ethereum.Value.fromString(id)],
     );
 
@@ -1253,7 +1249,7 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
   ): ethereum.CallResult<PlayFiLicenseSale__getReferralResultReferralStruct> {
     let result = super.tryCall(
       "getReferral",
-      "getReferral(string):((uint256,uint256,address))",
+      "getReferral(string):((bool,uint256,address))",
       [ethereum.Value.fromString(id)],
     );
     if (result.reverted) {
@@ -1692,12 +1688,12 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
   referrals(param0: string): PlayFiLicenseSale__referralsResult {
     let result = super.call(
       "referrals",
-      "referrals(string):(uint256,uint256,address)",
+      "referrals(string):(bool,uint256,address)",
       [ethereum.Value.fromString(param0)],
     );
 
     return new PlayFiLicenseSale__referralsResult(
-      result[0].toBigInt(),
+      result[0].toBoolean(),
       result[1].toBigInt(),
       result[2].toAddress(),
     );
@@ -1708,7 +1704,7 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
   ): ethereum.CallResult<PlayFiLicenseSale__referralsResult> {
     let result = super.tryCall(
       "referrals",
-      "referrals(string):(uint256,uint256,address)",
+      "referrals(string):(bool,uint256,address)",
       [ethereum.Value.fromString(param0)],
     );
     if (result.reverted) {
@@ -1717,57 +1713,11 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(
       new PlayFiLicenseSale__referralsResult(
-        value[0].toBigInt(),
+        value[0].toBoolean(),
         value[1].toBigInt(),
         value[2].toAddress(),
       ),
     );
-  }
-
-  standardCommissionPercentage(): BigInt {
-    let result = super.call(
-      "standardCommissionPercentage",
-      "standardCommissionPercentage():(uint256)",
-      [],
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_standardCommissionPercentage(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "standardCommissionPercentage",
-      "standardCommissionPercentage():(uint256)",
-      [],
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  standardDiscountPercentage(): BigInt {
-    let result = super.call(
-      "standardDiscountPercentage",
-      "standardDiscountPercentage():(uint256)",
-      [],
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_standardDiscountPercentage(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "standardDiscountPercentage",
-      "standardDiscountPercentage():(uint256)",
-      [],
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   supportsInterface(interfaceId: Bytes): boolean {
@@ -2635,12 +2585,8 @@ export class SetReferralCall__Inputs {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get commission(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-
-  get discount(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
+  get active(): boolean {
+    return this._call.inputValues[2].value.toBoolean();
   }
 }
 

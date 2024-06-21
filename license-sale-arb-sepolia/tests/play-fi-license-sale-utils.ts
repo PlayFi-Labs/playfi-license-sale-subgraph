@@ -119,7 +119,7 @@ export function createPublicSaleStatusSetEvent(status: boolean): PublicSaleStatu
     return publicSaleStatusSetEvent;
 }
 
-export function createReferralUpdatedEvent(code: string, receiver: Address, commission: BigInt, discount: BigInt): ReferralUpdated {
+export function createReferralUpdatedEvent(code: string, receiver: Address, active: boolean): ReferralUpdated {
     let referralUpdatedEvent = changetype<ReferralUpdated>(newMockEvent())
 
     referralUpdatedEvent.parameters = new Array()
@@ -140,15 +140,8 @@ export function createReferralUpdatedEvent(code: string, receiver: Address, comm
 
     referralUpdatedEvent.parameters.push(
         new ethereum.EventParam(
-            "commission",
-            ethereum.Value.fromUnsignedBigInt(commission)
-        )
-    )
-
-    referralUpdatedEvent.parameters.push(
-        new ethereum.EventParam(
-            "discount",
-            ethereum.Value.fromUnsignedBigInt(discount)
+            "active",
+            ethereum.Value.fromBoolean(active)
         )
     )
 

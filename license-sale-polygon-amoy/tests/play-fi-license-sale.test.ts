@@ -439,7 +439,7 @@ describe("ReferralUpdated sets the correct referral entity", () => {
 
   test("Referral is initialized when it does not exist", () => {
 
-    let newReferralUpdatedEvent = createReferralUpdatedEvent("REFERRAL", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(10), BigInt.fromI32(5))
+    let newReferralUpdatedEvent = createReferralUpdatedEvent("REFERRAL", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), true)
     handleReferralUpdated(newReferralUpdatedEvent)
 
     assert.fieldEquals(
@@ -473,15 +473,8 @@ describe("ReferralUpdated sets the correct referral entity", () => {
     assert.fieldEquals(
         "Referral",
         "REFERRAL",
-        "commissionPercentage",
-        BigInt.fromI32(10).toString()
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "REFERRAL",
-        "discountPercentage",
-        BigInt.fromI32(5).toString()
+        "active",
+        "true"
     )
 
     assert.fieldEquals(
@@ -498,7 +491,7 @@ describe("ReferralUpdated sets the correct referral entity", () => {
     let newCommissionPaidEvent = createCommissionPaidEvent("REFERRAL", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100))
     handleCommissionPaid(newCommissionPaidEvent)
 
-    let newReferralUpdatedEvent = createReferralUpdatedEvent("REFERRAL", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(12), BigInt.fromI32(7))
+    let newReferralUpdatedEvent = createReferralUpdatedEvent("REFERRAL", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), true)
     handleReferralUpdated(newReferralUpdatedEvent)
 
     assert.fieldEquals(
@@ -525,15 +518,8 @@ describe("ReferralUpdated sets the correct referral entity", () => {
     assert.fieldEquals(
         "Referral",
         "REFERRAL",
-        "commissionPercentage",
-        BigInt.fromI32(12).toString()
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "REFERRAL",
-        "discountPercentage",
-        BigInt.fromI32(7).toString()
+        "active",
+        "true"
     )
 
     assert.fieldEquals(
@@ -550,7 +536,7 @@ describe("ReferralUpdated sets the correct referral entity", () => {
     let newTierSetEvent = createTierSetEvent(BigInt.fromU32(4), BigInt.fromI32(1000), BigInt.fromI32(5), BigInt.fromI32(0), BigInt.fromI32(100))
     handleTierSet(newTierSetEvent)
 
-    let newReferralUpdatedEvent = createReferralUpdatedEvent("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(5), BigInt.fromI32(5))
+    let newReferralUpdatedEvent = createReferralUpdatedEvent("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), true)
     handleReferralUpdated(newReferralUpdatedEvent)
 
     let newPublicLicensesClaimedEvent = createPublicLicensesClaimedEvent(Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(10), BigInt.fromU32(4), BigInt.fromI32(100), "")
@@ -587,15 +573,8 @@ describe("ReferralUpdated sets the correct referral entity", () => {
     assert.fieldEquals(
         "Referral",
         "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "commissionPercentage",
-        BigInt.fromI32(5).toString()
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "discountPercentage",
-        BigInt.fromI32(5).toString()
+        "active",
+        "true"
     )
 
     assert.fieldEquals(
@@ -612,7 +591,7 @@ describe("ReferralUpdated sets the correct referral entity", () => {
     let newCommissionPaidEvent = createCommissionPaidEvent("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(100))
     handleCommissionPaid(newCommissionPaidEvent)
 
-    let newReferralUpdatedEvent = createReferralUpdatedEvent("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(12), BigInt.fromI32(7))
+    let newReferralUpdatedEvent = createReferralUpdatedEvent("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), true)
     handleReferralUpdated(newReferralUpdatedEvent)
 
     assert.fieldEquals(
@@ -639,15 +618,8 @@ describe("ReferralUpdated sets the correct referral entity", () => {
     assert.fieldEquals(
         "Referral",
         "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "commissionPercentage",
-        BigInt.fromI32(12).toString()
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "discountPercentage",
-        BigInt.fromI32(7).toString()
+        "active",
+        "true"
     )
 
     assert.fieldEquals(
@@ -1003,7 +975,7 @@ describe("CommissionPaid does the correct commission updates", () => {
 
   test("Commission total and total used are correctly updated", () => {
 
-    let newReferralUpdatedEvent = createReferralUpdatedEvent("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(5), BigInt.fromI32(5))
+    let newReferralUpdatedEvent = createReferralUpdatedEvent("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), true)
     handleReferralUpdated(newReferralUpdatedEvent)
 
     let newCommissionPaidEvent = createCommissionPaidEvent("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7", Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"), BigInt.fromI32(1000))
@@ -1033,15 +1005,8 @@ describe("CommissionPaid does the correct commission updates", () => {
     assert.fieldEquals(
         "Referral",
         "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "commissionPercentage",
-        BigInt.fromI32(5).toString()
-    )
-
-    assert.fieldEquals(
-        "Referral",
-        "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        "discountPercentage",
-        BigInt.fromI32(5).toString()
+        "active",
+        "true"
     )
 
     assert.fieldEquals(

@@ -482,15 +482,9 @@
       },
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "commission",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "discount",
-        "type": "uint256"
+        "internalType": "bool",
+        "name": "active",
+        "type": "bool"
       }
     ],
     "name": "ReferralUpdated",
@@ -1076,13 +1070,13 @@
       {
         "components": [
           {
-            "internalType": "uint256",
-            "name": "discountPercentage",
-            "type": "uint256"
+            "internalType": "bool",
+            "name": "active",
+            "type": "bool"
           },
           {
             "internalType": "uint256",
-            "name": "commissionPercentage",
+            "name": "totalClaims",
             "type": "uint256"
           },
           {
@@ -1513,13 +1507,13 @@
     "name": "referrals",
     "outputs": [
       {
-        "internalType": "uint256",
-        "name": "discountPercentage",
-        "type": "uint256"
+        "internalType": "bool",
+        "name": "active",
+        "type": "bool"
       },
       {
         "internalType": "uint256",
-        "name": "commissionPercentage",
+        "name": "totalClaims",
         "type": "uint256"
       },
       {
@@ -1709,14 +1703,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "commission",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "discount",
-        "type": "uint256"
+        "internalType": "bool",
+        "name": "active",
+        "type": "bool"
       }
     ],
     "name": "setReferral",
@@ -1804,32 +1793,6 @@
     "name": "setWhitelistTiers",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "standardCommissionPercentage",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "standardDiscountPercentage",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {

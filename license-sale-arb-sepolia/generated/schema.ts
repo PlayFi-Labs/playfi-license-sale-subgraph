@@ -352,30 +352,17 @@ export class Referral extends Entity {
     this.set("recipient", Value.fromBytes(value));
   }
 
-  get commissionPercentage(): BigInt {
-    let value = this.get("commissionPercentage");
+  get active(): boolean {
+    let value = this.get("active");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return false;
     } else {
-      return value.toBigInt();
+      return value.toBoolean();
     }
   }
 
-  set commissionPercentage(value: BigInt) {
-    this.set("commissionPercentage", Value.fromBigInt(value));
-  }
-
-  get discountPercentage(): BigInt {
-    let value = this.get("discountPercentage");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set discountPercentage(value: BigInt) {
-    this.set("discountPercentage", Value.fromBigInt(value));
+  set active(value: boolean) {
+    this.set("active", Value.fromBoolean(value));
   }
 
   get totalCommission(): BigInt {
