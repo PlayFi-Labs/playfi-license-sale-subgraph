@@ -89,7 +89,7 @@ describe("ContractInitialized sets up the correct start state", () => {
 
   test("Phase entities checks out", () => {
 
-    assert.entityCount("Phase", 4)
+    assert.entityCount("Phase", 5)
 
     assert.fieldEquals(
         "Phase",
@@ -143,6 +143,20 @@ describe("ContractInitialized sets up the correct start state", () => {
     assert.fieldEquals(
         "Phase",
         "public",
+        "active",
+        "false"
+    )
+
+    assert.fieldEquals(
+        "Phase",
+        "whitelist",
+        "name",
+        "whitelist"
+    )
+
+    assert.fieldEquals(
+        "Phase",
+        "whitelist",
         "active",
         "false"
     )

@@ -438,6 +438,24 @@ export class PublicWhitelistLicensesClaimed__Params {
   }
 }
 
+export class PublicWhitelistSaleStatusSet extends ethereum.Event {
+  get params(): PublicWhitelistSaleStatusSet__Params {
+    return new PublicWhitelistSaleStatusSet__Params(this);
+  }
+}
+
+export class PublicWhitelistSaleStatusSet__Params {
+  _event: PublicWhitelistSaleStatusSet;
+
+  constructor(event: PublicWhitelistSaleStatusSet) {
+    this._event = event;
+  }
+
+  get status(): boolean {
+    return this._event.parameters[0].value.toBoolean();
+  }
+}
+
 export class ReferralUpdated extends ethereum.Event {
   get params(): ReferralUpdated__Params {
     return new ReferralUpdated__Params(this);
@@ -707,6 +725,31 @@ export class PlayFiLicenseSale__getTierResultTierStruct extends ethereum.Tuple {
 
   get totalCap(): BigInt {
     return this[3].toBigInt();
+  }
+}
+
+export class PlayFiLicenseSale__partnerReferralsResult {
+  value0: BigInt;
+  value1: Address;
+
+  constructor(value0: BigInt, value1: Address) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromAddress(this.value1));
+    return map;
+  }
+
+  getTotalClaims(): BigInt {
+    return this.value0;
+  }
+
+  getReceiver(): Address {
+    return this.value1;
   }
 }
 
@@ -1418,27 +1461,37 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  partnerReceiverAddress(param0: string): Address {
+  partnerReferrals(param0: string): PlayFiLicenseSale__partnerReferralsResult {
     let result = super.call(
-      "partnerReceiverAddress",
-      "partnerReceiverAddress(string):(address)",
+      "partnerReferrals",
+      "partnerReferrals(string):(uint256,address)",
       [ethereum.Value.fromString(param0)],
     );
 
-    return result[0].toAddress();
+    return new PlayFiLicenseSale__partnerReferralsResult(
+      result[0].toBigInt(),
+      result[1].toAddress(),
+    );
   }
 
-  try_partnerReceiverAddress(param0: string): ethereum.CallResult<Address> {
+  try_partnerReferrals(
+    param0: string,
+  ): ethereum.CallResult<PlayFiLicenseSale__partnerReferralsResult> {
     let result = super.tryCall(
-      "partnerReceiverAddress",
-      "partnerReceiverAddress(string):(address)",
+      "partnerReferrals",
+      "partnerReferrals(string):(uint256,address)",
       [ethereum.Value.fromString(param0)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
+    return ethereum.CallResult.fromValue(
+      new PlayFiLicenseSale__partnerReferralsResult(
+        value[0].toBigInt(),
+        value[1].toAddress(),
+      ),
+    );
   }
 
   partnerSaleActive(param0: string): boolean {
@@ -1713,6 +1766,29 @@ export class PlayFiLicenseSale extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  publicWhitelistSaleActive(): boolean {
+    let result = super.call(
+      "publicWhitelistSaleActive",
+      "publicWhitelistSaleActive():(bool)",
+      [],
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_publicWhitelistSaleActive(): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "publicWhitelistSaleActive",
+      "publicWhitelistSaleActive():(bool)",
+      [],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   receiverToReferralCode(param0: Address): string {
@@ -2641,6 +2717,36 @@ export class SetPublicSaleCall__Outputs {
   _call: SetPublicSaleCall;
 
   constructor(call: SetPublicSaleCall) {
+    this._call = call;
+  }
+}
+
+export class SetPublicWhitelistSaleCall extends ethereum.Call {
+  get inputs(): SetPublicWhitelistSaleCall__Inputs {
+    return new SetPublicWhitelistSaleCall__Inputs(this);
+  }
+
+  get outputs(): SetPublicWhitelistSaleCall__Outputs {
+    return new SetPublicWhitelistSaleCall__Outputs(this);
+  }
+}
+
+export class SetPublicWhitelistSaleCall__Inputs {
+  _call: SetPublicWhitelistSaleCall;
+
+  constructor(call: SetPublicWhitelistSaleCall) {
+    this._call = call;
+  }
+
+  get status(): boolean {
+    return this._call.inputValues[0].value.toBoolean();
+  }
+}
+
+export class SetPublicWhitelistSaleCall__Outputs {
+  _call: SetPublicWhitelistSaleCall;
+
+  constructor(call: SetPublicWhitelistSaleCall) {
     this._call = call;
   }
 }

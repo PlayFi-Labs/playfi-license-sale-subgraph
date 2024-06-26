@@ -1,11 +1,22 @@
 import {
   CommissionPaid,
-  ContractInitialized, EarlyAccessLicensesClaimed,
-  EarlyAccessSaleStatusSet, FriendsFamilyLicensesClaimed,
-  FriendsFamilySaleStatusSet, PartnerLicensesClaimed,
-  PartnerSaleStatusSet, PartnerTierSet, PublicLicensesClaimed,
-  PublicSaleStatusSet, PublicWhitelistLicensesClaimed, ReferralUpdated, TeamLicensesClaimed,
-  TeamSaleStatusSet, TierSet, WhitelistTierSet
+  ContractInitialized,
+  EarlyAccessLicensesClaimed,
+  EarlyAccessSaleStatusSet,
+  FriendsFamilyLicensesClaimed,
+  FriendsFamilySaleStatusSet,
+  PartnerLicensesClaimed,
+  PartnerSaleStatusSet,
+  PartnerTierSet,
+  PublicLicensesClaimed,
+  PublicSaleStatusSet,
+  PublicWhitelistLicensesClaimed,
+  PublicWhitelistSaleStatusSet,
+  ReferralUpdated,
+  TeamLicensesClaimed,
+  TeamSaleStatusSet,
+  TierSet,
+  WhitelistTierSet
 } from "../generated/PlayFiLicenseSale/PlayFiLicenseSale"
 import {Account, Claim, Phase, Referral, ReferralOwner, Stat, Tier} from "../generated/schema"
 import {Address, BigInt, Bytes, ByteArray, log, store} from "@graphprotocol/graph-ts";
@@ -43,6 +54,12 @@ export function handleContractInitialized(event: ContractInitialized): void {
   publicPhase.name = 'public';
   publicPhase.active = false;
   publicPhase.save();
+
+  //Set whitelist phase paused
+  let whitelistPhase = new Phase('whitelist');
+  whitelistPhase.name = 'whitelist';
+  whitelistPhase.active = false;
+  whitelistPhase.save();
 }
 
 export function handleTeamSaleStatusSet(event: TeamSaleStatusSet): void {
@@ -77,6 +94,12 @@ export function handlePublicSaleStatusSet(event: PublicSaleStatusSet): void {
   let publicPhase = Phase.load('public');
   publicPhase!.active = event.params.status;
   publicPhase!.save();
+}
+
+export function handlePublicWhitelistSaleStatusSet(event: PublicWhitelistSaleStatusSet): void {
+  let publicWhitelistPhase = Phase.load('whitelist');
+  publicWhitelistPhase!.active = event.params.status;
+  publicWhitelistPhase!.save();
 }
 
 export function handleReferralUpdated(event: ReferralUpdated): void {

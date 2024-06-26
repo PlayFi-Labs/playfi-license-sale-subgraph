@@ -8,9 +8,9 @@ dataSources:
     name: PlayFiLicenseSale
     network: arbitrum-sepolia
     source:
-      address: "0xDB765E54C79111642b7A20BB454AA6588c19426b"
+      address: "0xCc91412e293a575CaE8dcDE0B72DE754215198D6"
       abi: PlayFiLicenseSale
-      startBlock: 56886347
+      startBlock: 58636933
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -39,6 +39,8 @@ dataSources:
           handler: handlePartnerSaleStatusSet
         - event: PublicSaleStatusSet(bool)
           handler: handlePublicSaleStatusSet
+        - event: PublicWhitelistSaleStatusSet(bool)
+          handler: handlePublicWhitelistSaleStatusSet
         - event: ReferralUpdated(string,indexed address)
           handler: handleReferralUpdated
         - event: TierSet(indexed uint256,uint256,uint256,uint256,uint256)
