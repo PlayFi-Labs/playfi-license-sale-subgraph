@@ -8,9 +8,9 @@ dataSources:
     name: PlayFiLicenseSale
     network: arbitrum-sepolia
     source:
-      address: "0xCc91412e293a575CaE8dcDE0B72DE754215198D6"
+      address: "0x7e63815F59228a23fd89bcf0Aa903C3835E2604b"
       abi: PlayFiLicenseSale
-      startBlock: 58636933
+      startBlock: 64231504
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

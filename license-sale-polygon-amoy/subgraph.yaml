@@ -8,9 +8,9 @@ dataSources:
     name: PlayFiLicenseSale
     network: polygon-amoy
     source:
-      address: "0xD42F84b826343eA2Fc439e2c590F28c214e716Ed"
+      address: "0x7133Ad00f160C5975183C8484ffb832Ba7fADbDB"
       abi: PlayFiLicenseSale
-      startBlock: 8754966
+      startBlock: 9544999
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

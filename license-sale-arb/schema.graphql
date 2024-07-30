@@ -1,0 +1,54 @@
+type Tier @entity {
+    id: ID!
+    type: String!
+    number: BigInt!
+    claimed: BigInt!
+    price: BigInt!
+    totalCap: BigInt!
+    individualCap: BigInt!
+}
+
+type Phase @entity {
+    id: ID!
+    name: String!
+    active: Boolean!
+}
+
+type Stat @entity {
+    id: ID!
+    totalClaims: BigInt!
+    totalProceeds: BigInt!
+    publicClaims: BigInt!
+    publicProceeds: BigInt!
+}
+
+type Referral @entity {
+    id: ID!
+    code: String!
+    recipient: Bytes!
+    totalCommission: BigInt!
+    totalUsed: BigInt!
+    activeSince: BigInt!
+}
+
+type ReferralOwner @entity {
+    id: ID!
+    recipient: Bytes!
+}
+
+type Account @entity {
+    id: ID!
+    totalLicenses: BigInt!
+    totalPaid: BigInt!
+    claims: [Claim!]! @derivedFrom(field: "account")
+}
+
+type Claim @entity {
+    id: ID!
+    account: Account!
+    phase: Phase!
+    tier: Tier
+    amount: BigInt!
+    referral: Referral
+    paid: BigInt!
+}
